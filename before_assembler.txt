@@ -1,0 +1,8 @@
+in
+in
+in
+push 5
+pop rcx
+pop rbx
+pop rax
+hlt
