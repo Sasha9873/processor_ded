@@ -64,7 +64,24 @@ size_t get_n_strings(char* buffer, size_t buff_size)
 	for(size_t i = 0; i < buff_size; ++i)
 	{
 		if(buffer[i] == '\n' || buffer[i] == ' ')
+		{
 			++n_strings;
+			if(i + 1 < buff_size)
+				printf("cur sym <%c> n_strs = %d i = %d\n", buffer[i+1], n_strings, i);
+
+			while(i + 1 < buff_size && buffer[i + 1] == '\n' || buffer[i + 1] == ' ')
+				++i;
+		}
+		else if(buffer[i] == ';')
+		{
+			if((i != 0) && buffer[i - 1] == ' ')
+				--n_strings;
+
+			while(i < buff_size &&  buffer[i] != '\n')
+				++i;
+			
+			++n_strings;
+		}
 	}
 
 	return n_strings;
@@ -97,23 +114,61 @@ void parse_buffer(file_information* file_info, errors* error)
 	size_t cur_str = 0;
 	for(size_t i = 0; i < file_info->size; ++i)
 	{
-		if(i == file_info->size - 1)
-		{
-			++cur_str;
-			buffer[i] = '\0';
-			break;
-		}
+		//printf("buffer[i %d] = <%c> buffer[i+1 %d] = <%c>\n", i, buffer[i], i + 1, buffer[i + 1]);
+
 
 		if(buffer[i] == '\n' || buffer[i] == ' ')
 		{
-			file_info->text[++cur_str] = &buffer[i + 1];
 			buffer[i] = '\0';
+
+			while((i + 1) < file_info->size && buffer[i + 1] == ' ' || buffer[i + 1] == '\n')  //delete (in fact just ignore) ' ', '\n' after '\n' and ' '
+			{
+				//printf("2 buffer[i %d] = <%c> buffer[i+1 %d] = <%c>\n", i, buffer[i], i + 1, buffer[i + 1]);
+				buffer[i + 1] = '\0';
+				++i;
+			}	
+
+			if((i + 1) < file_info->size)
+			{
+				printf("i + 1 = %d file_info->size = %d cur_str = %d buf = <%c>\n", i+1, file_info->size, cur_str + 1, buffer[i+1]);
+				file_info->text[++cur_str] = &buffer[i + 1];
+			}
+		}
+		else if(buffer[i] == ';')   //for comments in file.txt
+		{
+			if((i != 0) && buffer[i - 1] == '\0')
+				--cur_str;
+
+			buffer[i] = '\0';
+
+			while(i < file_info->size && buffer[i] != '\n')
+			{
+				buffer[i] = '\0';
+				++i;
+			}
+
+			while((i + 1) < file_info->size && buffer[i + 1] == ' ' || buffer[i + 1] == '\n')  //delete (in fact just ignore) ' ', '\n' after '\n' and ' '
+			{
+				//printf("2 buffer[i %d] = <%c> buffer[i+1 %d] = <%c>\n", i, buffer[i], i + 1, buffer[i + 1]);
+				buffer[i + 1] = '\0';
+				++i;
+			}	
+
+
+			if((i + 1) < file_info->size)
+			{
+				printf("2i + 1 = %d file_info->size = %d cur_str = %d buf = <%c>\n", i+1, file_info->size, cur_str + 1, buffer[i+1]);
+				file_info->text[++cur_str] = &buffer[i + 1];
+			}
 		}
 	}
 
+	//if(cur_str)
+		//file_info->n_strings = cur_str - 1;
+
 	printf("after parse_buffer:\n");
 	for(size_t i = 0; i < file_info->n_strings; ++i)
-		printf("%s\n", file_info->text[i]);
+		printf("%d <%s>\n", i, file_info->text[i]);
 
 	
 }
@@ -210,13 +265,13 @@ int compare(const void* first_str, const void* second_str)
 
 void print_strs(file_information* file_info)
 {
-	printf(">\n");
+	printf("<\n");
 	if(!file_info){
-		printf("<\n");
+		printf(">\n");
 		return;
 	}
 	if(!file_info->text){
-		printf("<\n");
+		printf(">\n");
 		return;
 	}
 
@@ -225,7 +280,7 @@ void print_strs(file_information* file_info)
 		if(file_info->text[i])
 			printf("%s\n", file_info->text[i]);
 	}
-	printf("<\n");
+	printf(">\n");
 }
 
 

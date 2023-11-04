@@ -15,7 +15,7 @@ errors assemble(file_information* file_info)
 {
 	errors error = ALL_OK;
 
-	FILE* file_to_write = open_file("after_assembler.txt", "wb", &error);
+	FILE* file_to_write = open_file("after_assembler.txt", "wb+", &error);
 	if(error != ALL_OK)
 	{
 		printf("error = %d\n", error);
@@ -135,9 +135,10 @@ int main(int argc, char** argv)
 	print_strs(file_info);
 
 
-	assemble(file_info);	
+	assemble(file_info);	/**/
 
 
 	file_info = delete_file_info(file_info);
+
 	return 0;
 }

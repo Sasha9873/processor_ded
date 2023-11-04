@@ -2,7 +2,8 @@ in
 in
 in
 push 5
-pop rcx
+
+pop rcx   ; rcx = 5
 pop rbx
-pop rax
-hlt
+pop rax  
+hlt 
