@@ -4,16 +4,19 @@
 #ifndef STACK_FUNC_H_INCLUDED
 #define STACK_FUNC_H_INCLUDED
 
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <string.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
 
-	#include "stack_struct.h"
-	#include "errors_enum_naming.h"
-	
-	
+    #include "stack_struct.h"
+    #include "errors_enum_naming.h"
 
-	/**
+    
+    static const size_t N_ELEMS_PRINT = 100; ///< Amount of elements will be printed in stack_dump
+    
+    
+
+    /**
      * Creates(allocates memory) data(massif with numbers which we push and pop from stack).
      *
      * @param [in] *error  Pointer to error. At the end of the program 0 if all is normal, NOT_MEMORY if we have not enough memory, 
@@ -21,9 +24,9 @@
      *
      * @returns Pointer to stack
      */
-	Stack* stack_ctor(errors* error);
+    Stack* stack_ctor(errors* error);
 
-	/**
+    /**
      * Puts poison in the data, free data's memory. Puts poison in the pointer to data, in the current_size of data, in the capacity.
      * DO NOT free stk
      * 
@@ -33,7 +36,7 @@
      */
     Stack* stack_dtor(Stack* stk);
 
-	/**
+    /**
      * Puts a new value in the massif data, if it needs then allocates new memory. Adds 1 to the current_size in stack, changes 
      * capacity if we have allocated new memory.
      *
@@ -84,6 +87,8 @@
      *
      * @returns ALL_OK if all is normal, BAD_STACK_POINTER if stk consists of NULL or BAD_PTR(which is written in constants), 
      * BAD_FILE_POINTER if stk->file_with_errors consists of NULL.
+     * 
+     * Prints only N_ELEMS_PRINT (const) in stack
      */
     int stack_dump(Stack* stk, errors reason);
 
@@ -95,12 +100,20 @@
      * @returns pointer to element with number num in Stack data (numeration from 0) or NULL if stk or stk-data consists of NULL or 
      * BAD_PTR(elem_type *const, defined in "stack_struct.h"), returns NULL also if num < 0
      */
-	elem_type* get_data_elem_pointer(Stack* stk, int num);
+    elem_type* get_data_elem_pointer(Stack* stk, size_t num);
 
 
-	elem_type* change_capacity(Stack* stk, size_t new_capacity);
+    /**
+     * Allocates new memory, copy previous data to new one, memset 0...0 after previous data in new data, change stk->capacity
+     * 
+     * @param [in] stk Pointer to stack
+     * @param [in] new_capacity  New capacity we want for data
+     * 
+     * @returns pointer to new memory or NULL if realloc can not allocate new memory
+     */
+    elem_type* change_capacity(Stack* stk, size_t new_capacity);
 
-	/**
+    /**
      * Counts massif data hash.
      *
      * @param [in] stk Pointer to stack

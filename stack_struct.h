@@ -3,9 +3,6 @@
 
 #ifndef STACK_STRUCT_H_INCLUDED
 #define STACK_STRUCT_H_INCLUDED
-    #include <stdio.h>
-    #include <stddef.h>
-
 
     #define DEBAG 1
 
@@ -25,11 +22,11 @@
 
     #if DEBAG == 1
         #define CHECKSTACK(reason)\
-            if(!stack_ok(stk) || reason != ALL_OK){\
+            if(stack_ok(stk) != ALL_OK || reason != ALL_OK){\
                     if(stk && stk->file_with_errors)\
                         fprintf(stk->file_with_errors, "Called from %s() at %s(%d),\n", __FUNCTION__, __FILE__, __LINE__);\
                     else\
-                        fprintf(stdout, "Called from %s() at %s(%d),\n", __FUNCTION__, __FILE__, __LINE__);\
+                        fprintf(stderr, "Called from %s() at %s(%d),\n", __FUNCTION__, __FILE__, __LINE__);\
                 stack_dump(stk, reason);\
             }
     #else
@@ -49,7 +46,7 @@
     static elem_type* const BAD_PTR = (elem_type* const)13;
     static const canary_type BEGIN_CANARY_VALUE = 0xBADC0FFEE;
     static const canary_type END_CANARY_VALUE = 0xBADDED;
-    static const int N_DATA_ELEMS_BEGIN = 1; ///< amount of elems in data after calling constuctor of stack(stack_ctor) 
+    static const size_t N_DATA_ELEMS_BEGIN = 1; ///< amount of elems in data after calling constuctor of stack(stack_ctor) 
     static const int POISON = -666;  ///< Poison, it puts in elements after distroing
 
     typedef struct Stack
@@ -62,13 +59,15 @@
             long long hash_value;
         #endif
 
-        int capacity;
-        int curr_size;
+        struct Stack* stack_pointer; ///< pointer to the object of struct Stack
+
+        size_t capacity;
+        size_t curr_size;
         elem_type* data;
 
-        int pop_change;
-        int push_change;  ///< in what value do realloc
-        int when_pop_change;   ///< when do pop change
+        size_t pop_change;
+        size_t push_change;  ///< in what value do realloc
+        size_t when_pop_change;   ///< when do pop change
 
         int gap_after_begin_canary;
         int gap_before_end_canary;

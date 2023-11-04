@@ -1,11 +1,15 @@
-#include "processor_struct.h"
 #include "work_with_strs_from_file.h"
-#include "stack_struct.h"
-#include "stack_func.h"
 #include "commands.h"
 
 static const int MAX_FILE_NAME = 30;
 static const int MAX_COMMAND_LEN = 10;
+
+int is_reg(char* str)
+{
+	if(strlen(str) != 3)
+		return 0;
+	return (str[0] == 'r' && str[2] == 'x');
+}
 
 errors assemble(file_information* file_info)
 {
@@ -23,14 +27,76 @@ errors assemble(file_information* file_info)
 	{
 		if(!strncmp(file_info->text[cur_str], "push", MAX_COMMAND_LEN))
 		{
-			int arg = atoi(file_info->text[++cur_str]);
+			++cur_str;
 
-			fprintf(file_to_write, "%d %d\n", CMD_PUSH, arg);
+			if(is_reg(file_info->text[cur_str]))
+			{
+				fprintf(file_to_write, "%d %d\n", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
+			}
+			else
+			{
+				int arg = atoi(file_info->text[cur_str]);
+
+				fprintf(file_to_write, "%d %d\n", CMD_PUSH, arg);
+			}	
+		}
+
+		else if(!strncmp(file_info->text[cur_str], "pop", MAX_COMMAND_LEN))
+		{
+			if(is_reg(file_info->text[cur_str + 1]))
+			{
+				++cur_str;
+				fprintf(file_to_write, "%d %d\n", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
+			}
+			else
+				fprintf(file_to_write, "%d\n", CMD_POP);
+		}
+
+		else if(!strncmp(file_info->text[cur_str], "hlt", MAX_COMMAND_LEN))
+		{
+			fprintf(file_to_write, "%d\n", CMD_HLT);
+		}
+
+		else if(!strncmp(file_info->text[cur_str], "add", MAX_COMMAND_LEN))
+		{
+			fprintf(file_to_write, "%d\n", CMD_ADD);
+		}
+		
+		else if(!strncmp(file_info->text[cur_str], "sub", MAX_COMMAND_LEN))
+		{
+			fprintf(file_to_write, "%d\n", CMD_SUB);
+		}
+		
+		else if(!strncmp(file_info->text[cur_str], "mul", MAX_COMMAND_LEN))
+		{
+			fprintf(file_to_write, "%d\n", CMD_MUL);
+		}
+		
+		else if(!strncmp(file_info->text[cur_str], "div", MAX_COMMAND_LEN))
+		{
+			fprintf(file_to_write, "%d\n", CMD_DIV);
+		}
+
+		else if(!strncmp(file_info->text[cur_str], "in", MAX_COMMAND_LEN))
+		{
+			fprintf(file_to_write, "%d\n", CMD_IN);
+		}
+
+		else if(!strncmp(file_info->text[cur_str], "out", MAX_COMMAND_LEN))
+		{
+			fprintf(file_to_write, "%d\n", CMD_OUT);
+		}
+
+		else
+		{
+			fprintf(stderr, "Unknown command\n");
 		}
 	}
 
 
 	fclose(file_to_write);
+
+	return error;
 }
 
 int main(int argc, char** argv)
