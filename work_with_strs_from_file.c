@@ -5,11 +5,13 @@ size_t get_file_size(FILE* file_ptr)
 {
 	fseek(file_ptr, 0, SEEK_END);
 
-	size_t size = ftell(file_ptr);
+	long int size = ftell(file_ptr);
+	if(size == -1)
+		return 0;
 
 	fseek(file_ptr, 0, SEEK_SET);
 
-	return size;
+	return (size_t)size;
 }
 
 FILE* open_file(const char* file_name, const char* mode, errors* error)
@@ -26,6 +28,38 @@ FILE* open_file(const char* file_name, const char* mode, errors* error)
 	}
 
 	return file_ptr;
+}
+
+char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error)
+{	
+	FILE* file_ptr = open_file(file_name, "rb", error);
+	if(!file_ptr)
+	{
+		*error = ERROR_OPEN_FILE;
+		return NULL;
+	}
+
+	size_t size = get_file_size(file_ptr);
+
+
+	char* buffer = (int*)calloc(size + 1, sizeof(char)); 
+	if(!buffer)
+	{
+		fclose(file_ptr);
+		*error = NOT_MEMORY;
+		return NULL;
+	}
+
+	fread(buffer, sizeof(char), size, file_ptr);
+
+	printf("buffer: \n<");
+	for(size_t i = 0; i < size; ++i)
+		printf("%d ", buffer[i]);
+	printf(">\n");
+
+	fclose(file_ptr);
+
+	return buffer;
 }
 
 ///returns buff
@@ -67,9 +101,9 @@ size_t get_n_strings(char* buffer, size_t buff_size)
 		{
 			++n_strings;
 			if(i + 1 < buff_size)
-				printf("cur sym <%c> n_strs = %d i = %d\n", buffer[i+1], n_strings, i);
+				//printf("cur sym <%c> n_strs = %d i = %d\n", buffer[i+1], n_strings, i);
 
-			while(i + 1 < buff_size && buffer[i + 1] == '\n' || buffer[i + 1] == ' ')
+			while(i + 1 < buff_size && (buffer[i + 1] == '\n' || buffer[i + 1] == ' '))
 				++i;
 		}
 		else if(buffer[i] == ';')
@@ -106,7 +140,7 @@ void parse_buffer(file_information* file_info, errors* error)
 
 	file_info->text = (char**)calloc(n_strings, sizeof(char*));
 
-	printf("size = %ld %c %d n_strings = %ld\n", file_info->size, file_info->buffer[0], file_info->buffer[0], n_strings);
+	//printf("size = %ld %c %d n_strings = %ld\n", file_info->size, file_info->buffer[0], file_info->buffer[0], n_strings);
 	
 
 	file_info->text[0] = buffer;
@@ -121,7 +155,7 @@ void parse_buffer(file_information* file_info, errors* error)
 		{
 			buffer[i] = '\0';
 
-			while((i + 1) < file_info->size && buffer[i + 1] == ' ' || buffer[i + 1] == '\n')  //delete (in fact just ignore) ' ', '\n' after '\n' and ' '
+			while((i + 1) < file_info->size && (buffer[i + 1] == ' ' || buffer[i + 1] == '\n'))  //delete (in fact just ignore) ' ', '\n' after '\n' and ' '
 			{
 				//printf("2 buffer[i %d] = <%c> buffer[i+1 %d] = <%c>\n", i, buffer[i], i + 1, buffer[i + 1]);
 				buffer[i + 1] = '\0';
@@ -130,7 +164,7 @@ void parse_buffer(file_information* file_info, errors* error)
 
 			if((i + 1) < file_info->size)
 			{
-				printf("i + 1 = %d file_info->size = %d cur_str = %d buf = <%c>\n", i+1, file_info->size, cur_str + 1, buffer[i+1]);
+				//printf("i + 1 = %d file_info->size = %d cur_str = %d buf = <%c>\n", i+1, file_info->size, cur_str + 1, buffer[i+1]);
 				file_info->text[++cur_str] = &buffer[i + 1];
 			}
 		}
@@ -147,7 +181,7 @@ void parse_buffer(file_information* file_info, errors* error)
 				++i;
 			}
 
-			while((i + 1) < file_info->size && buffer[i + 1] == ' ' || buffer[i + 1] == '\n')  //delete (in fact just ignore) ' ', '\n' after '\n' and ' '
+			while((i + 1) < file_info->size && (buffer[i + 1] == ' ' || buffer[i + 1] == '\n'))  //delete (in fact just ignore) ' ', '\n' after '\n' and ' '
 			{
 				//printf("2 buffer[i %d] = <%c> buffer[i+1 %d] = <%c>\n", i, buffer[i], i + 1, buffer[i + 1]);
 				buffer[i + 1] = '\0';
@@ -157,7 +191,7 @@ void parse_buffer(file_information* file_info, errors* error)
 
 			if((i + 1) < file_info->size)
 			{
-				printf("2i + 1 = %d file_info->size = %d cur_str = %d buf = <%c>\n", i+1, file_info->size, cur_str + 1, buffer[i+1]);
+				//printf("2i + 1 = %d file_info->size = %d cur_str = %d buf = <%c>\n", i+1, file_info->size, cur_str + 1, buffer[i+1]);
 				file_info->text[++cur_str] = &buffer[i + 1];
 			}
 		}
@@ -168,7 +202,7 @@ void parse_buffer(file_information* file_info, errors* error)
 
 	printf("after parse_buffer:\n");
 	for(size_t i = 0; i < file_info->n_strings; ++i)
-		printf("%d <%s>\n", i, file_info->text[i]);
+		printf("%lu <%s>\n", i, file_info->text[i]);
 
 	
 }

@@ -8,17 +8,18 @@
 
 #include "errors_enum_naming.h"
 
-struct file_information{
+typedef struct file_information{
 	const char* file_name;
 	size_t size;
 	size_t n_strings;
 	char* buffer;
 	char** text; ///< pointers to the beginning of the strs in the text
 
-} typedef file_information;
+} file_information;
 
 
 file_information* read_text_from_file_to_buff(const char* file_name, errors* error);  ///< ' 'also means new str
+char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error);
 size_t get_file_size(FILE* file_ptr);
 FILE* open_file(const char* file_name, const char* mode, errors* error);
 void parse_buffer(file_information* file_info, errors* error);

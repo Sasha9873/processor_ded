@@ -1,24 +1,72 @@
 #include "work_with_strs_from_file.h"
 #include "commands.h"
 
+#include <stdarg.h>
+
 static const int MAX_FILE_NAME = 30;
 static const int MAX_COMMAND_LEN = 10;
+static const int N_REGS = 4;
 
 int is_reg(char* str)
 {
 	if(strlen(str) != 3)
 		return 0;
-	return (str[0] == 'r' && str[2] == 'x');
+	if (str[0] != 'r' || str[2] != 'x')
+		return 0;
+	if((str[1] - 'a') >= 0 && (str[1] - 'a') < N_REGS)
+		return 1;
+	else
+		return 0;
+}
+
+void print_in_two_files(int n_numbers, FILE* first_file_ptr, FILE* second_file_ptr, ...)
+{
+	if(!first_file_ptr || !second_file_ptr)
+		return;
+
+	va_list args;
+	va_start(args, second_file_ptr);
+
+	if(n_numbers)
+	{
+		if(!args)
+			return;
+
+		int val = va_arg(args, int);
+
+		fprintf(first_file_ptr, "%d", val);
+		fprintf(second_file_ptr, "%c", val);
+	}
+		
+	while(--n_numbers && args)
+	{
+		int val = va_arg(args, int);
+
+		fprintf(first_file_ptr, " %d", val);
+		fprintf(second_file_ptr, "%c", val);
+	}
+
+	fprintf(first_file_ptr, "\n");
+
+	va_end(args);
 }
 
 errors assemble(file_information* file_info)
 {
 	errors error = ALL_OK;
 
-	FILE* file_to_write = open_file("after_assembler.txt", "wb+", &error);
+	FILE* file_to_write = open_file("after_assembler.txt", "wb", &error);
 	if(error != ALL_OK)
 	{
-		printf("error = %d\n", error);
+		fprintf(stderr, "error = %d\n", error);
+		return error;
+	}
+
+	FILE* file_with_code = open_file("code.txt", "wb", &error);
+	if(error != ALL_OK)
+	{
+		fclose(file_to_write);
+		fprintf(stderr, RED "error = %d\n" RST, error);
 		return error;
 	}
 
@@ -31,13 +79,20 @@ errors assemble(file_information* file_info)
 
 			if(is_reg(file_info->text[cur_str]))
 			{
-				fprintf(file_to_write, "%d %d\n", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
+				// fprintf(file_to_write, "%d %d\n", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
+				// fprintf(file_with_code, "%d%d", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
+				print_in_two_files(2, file_to_write, file_with_code, CMD_REG_PUSH, file_info->text[cur_str][1] - 'a' + 1);
 			}
 			else
 			{
 				int arg = atoi(file_info->text[cur_str]);
 
-				fprintf(file_to_write, "%d %d\n", CMD_PUSH, arg);
+				if(arg == 0 && file_info->text[cur_str][0] != '0')
+					fprintf(stderr, RED "Wrong reg, you have written: %s\n" RST, file_info->text[cur_str]);
+
+				// fprintf(file_to_write, "%d %d\n", CMD_PUSH, arg);
+				// fprintf(file_with_code, "%d%d", CMD_PUSH, arg);
+				print_in_two_files(2, file_to_write, file_with_code, CMD_PUSH, arg);
 			}	
 		}
 
@@ -46,55 +101,71 @@ errors assemble(file_information* file_info)
 			if(is_reg(file_info->text[cur_str + 1]))
 			{
 				++cur_str;
-				fprintf(file_to_write, "%d %d\n", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
+				// fprintf(file_to_write, "%d %d\n", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
+				// fprintf(file_with_code, "%d%d", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
+				print_in_two_files(2, file_to_write, file_with_code, CMD_REG_POP, file_info->text[cur_str][1] - 'a' + 1);
 			}
 			else
-				fprintf(file_to_write, "%d\n", CMD_POP);
+			{
+			// 	fprintf(file_to_write, "%d\n", CMD_POP);
+			// 	fprintf(file_with_code, "%d", CMD_POP);
+				print_in_two_files(1, file_to_write, file_with_code, CMD_POP);
+			}
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "hlt", MAX_COMMAND_LEN))
 		{
-			fprintf(file_to_write, "%d\n", CMD_HLT);
+			// fprintf(file_to_write, "%d\n", CMD_HLT);
+			// fprintf(file_with_code, "%d", CMD_HLT);
+			print_in_two_files(1, file_to_write, file_with_code, CMD_HLT);
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "add", MAX_COMMAND_LEN))
 		{
-			fprintf(file_to_write, "%d\n", CMD_ADD);
+			//fprintf(file_to_write, "%d\n", CMD_ADD);
+			//fprintf(file_with_code, "%d", CMD_ADD);
+			print_in_two_files(1, file_to_write, file_with_code, CMD_ADD);
 		}
 		
 		else if(!strncmp(file_info->text[cur_str], "sub", MAX_COMMAND_LEN))
 		{
-			fprintf(file_to_write, "%d\n", CMD_SUB);
+			//fprintf(file_to_write, "%d\n", CMD_SUB);
+			print_in_two_files(1, file_to_write, file_with_code, CMD_SUB);
 		}
 		
 		else if(!strncmp(file_info->text[cur_str], "mul", MAX_COMMAND_LEN))
 		{
-			fprintf(file_to_write, "%d\n", CMD_MUL);
+			//fprintf(file_to_write, "%d\n", CMD_MUL);
+			print_in_two_files(1, file_to_write, file_with_code, CMD_MUL);
 		}
 		
 		else if(!strncmp(file_info->text[cur_str], "div", MAX_COMMAND_LEN))
 		{
-			fprintf(file_to_write, "%d\n", CMD_DIV);
+			//fprintf(file_to_write, "%d\n", CMD_DIV);
+			print_in_two_files(1, file_to_write, file_with_code, CMD_DIV);
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "in", MAX_COMMAND_LEN))
 		{
-			fprintf(file_to_write, "%d\n", CMD_IN);
+			//fprintf(file_to_write, "%d\n", CMD_IN);
+			print_in_two_files(1, file_to_write, file_with_code, CMD_IN);
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "out", MAX_COMMAND_LEN))
 		{
-			fprintf(file_to_write, "%d\n", CMD_OUT);
+			//fprintf(file_to_write, "%d\n", CMD_OUT);
+			print_in_two_files(1, file_to_write, file_with_code, CMD_OUT);
 		}
 
 		else
 		{
-			fprintf(stderr, "Unknown command\n");
+			fprintf(stderr, RED "Unknown command\n" RST);
 		}
 	}
 
 
 	fclose(file_to_write);
+	fclose(file_with_code);
 
 	return error;
 }
@@ -118,7 +189,8 @@ int main(int argc, char** argv)
 	file_information* file_info = read_text_from_file_to_buff(file_name, &error);
 	if(error != ALL_OK)
 	{
-		printf("error = %d\n", error);
+		fprintf(stderr, RED "error = %d\n" RST, error);
+
 		return error;
 	}
 
@@ -128,7 +200,8 @@ int main(int argc, char** argv)
 	parse_buffer(file_info, &error);
 	if(error != ALL_OK)
 	{
-		printf("error = %d\n", error);
+		fprintf(stderr, RED "error = %d\n" RST, error);
+
 		return error;
 	}
 

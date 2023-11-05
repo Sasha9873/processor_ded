@@ -4,6 +4,8 @@
 #ifndef STACK_STRUCT_H_INCLUDED
 #define STACK_STRUCT_H_INCLUDED
 
+    #include "stdio.h"
+
     #define DEBAG 1
 
     #define CHECK 2
