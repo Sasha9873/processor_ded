@@ -30,7 +30,7 @@ FILE* open_file(const char* file_name, const char* mode, errors* error)
 	return file_ptr;
 }
 
-char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error)
+char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, size_t* buff_size)
 {	
 	FILE* file_ptr = open_file(file_name, "rb", error);
 	if(!file_ptr)
@@ -42,7 +42,8 @@ char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error)
 	size_t size = get_file_size(file_ptr);
 
 
-	char* buffer = (int*)calloc(size + 1, sizeof(char)); 
+	//char* buffer = (int*)calloc(size + 1, sizeof(char)); 
+	char* buffer = (char*)calloc(size, sizeof(char)); 
 	if(!buffer)
 	{
 		fclose(file_ptr);
@@ -50,11 +51,15 @@ char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error)
 		return NULL;
 	}
 
-	fread(buffer, sizeof(char), size, file_ptr);
+	printf("%d %d %d\n", size, sizeof(char*), sizeof(buffer)/sizeof(buffer[0]));
 
+	fread(buffer, sizeof(char), size, file_ptr);
+	*buff_size = size;
+
+	printf("%d %d %d\n", size, sizeof(buffer), sizeof(buffer)/sizeof(buffer[0]));
 	printf("buffer: \n<");
 	for(size_t i = 0; i < size; ++i)
-		printf("%d ", buffer[i]);
+		printf("%d <%c>\n", buffer[i], buffer[i]);
 	printf(">\n");
 
 	fclose(file_ptr);

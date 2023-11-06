@@ -9,10 +9,22 @@ static const int N_REGS = 4;
 
 int is_reg(char* str)
 {
-	if(strlen(str) != 3)
+	if(strlen(str) < 3)
 		return 0;
+
+	for(size_t i = 3; i < strlen(str); ++i)
+	{
+		if(str[i] != ' ' && str[i] != '\n' && str[i] != '\t')
+		{
+			printf("str[%d] = <%c> aaaaa\n", i, str[i]);
+			return 0;
+		}
+	}
+		
+
 	if (str[0] != 'r' || str[2] != 'x')
 		return 0;
+
 	if((str[1] - 'a') >= 0 && (str[1] - 'a') < N_REGS)
 		return 1;
 	else
@@ -81,7 +93,7 @@ errors assemble(file_information* file_info)
 			{
 				// fprintf(file_to_write, "%d %d\n", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
 				// fprintf(file_with_code, "%d%d", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
-				print_in_two_files(2, file_to_write, file_with_code, CMD_REG_PUSH, file_info->text[cur_str][1] - 'a' + 1);
+				print_in_two_files(2, file_to_write, file_with_code, CMD_REG_PUSH, file_info->text[cur_str][1] - 'a');
 			}
 			else
 			{
@@ -103,7 +115,7 @@ errors assemble(file_information* file_info)
 				++cur_str;
 				// fprintf(file_to_write, "%d %d\n", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
 				// fprintf(file_with_code, "%d%d", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
-				print_in_two_files(2, file_to_write, file_with_code, CMD_REG_POP, file_info->text[cur_str][1] - 'a' + 1);
+				print_in_two_files(2, file_to_write, file_with_code, CMD_REG_POP, file_info->text[cur_str][1] - 'a');
 			}
 			else
 			{
@@ -159,7 +171,7 @@ errors assemble(file_information* file_info)
 
 		else
 		{
-			fprintf(stderr, RED "Unknown command\n" RST);
+			fprintf(stderr, RED "Unknown command: <%s>\n" RST, file_info->text[cur_str]);
 		}
 	}
 

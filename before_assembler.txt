@@ -2,11 +2,14 @@ in
 in
 in
 push 5
+push 10
+push 7
+pop rdx
 push rdx
 
-pop rcx   ; rcx = 5
-pop rbx
-pop rax  
+pop rcx   ; rcx = rdx = 7
+pop rbx	  ; rbx = 10
+pop rax   ; rax = 5
 mul
 div
 out

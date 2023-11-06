@@ -441,7 +441,10 @@ Stack* stack_dtor(Stack* stk)
     stk->capacity = 0;
 
     if(stk->file_with_errors)
+    {
         fclose(stk->file_with_errors);
+        stk->file_with_errors = NULL;
+    }
    
     free(stk);
     stk = (Stack*)BAD_PTR;
