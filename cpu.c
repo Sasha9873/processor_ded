@@ -183,14 +183,15 @@ errors run_proc(Proc* proc)
 			{
 				CHECKPROC(ALL_OK);
 
-				int arg = (int)proc->code[cur_cmd_num++];
+				elem_type arg = (elem_type)proc->code[cur_cmd_num++];
 				stack_push(proc->stk, arg);
 				
 				CHECKPROC(ALL_OK);
 
 				break;
 			}
-		case CMD_REG_PUSH:
+			
+			case CMD_REG_PUSH:
 			{
 				CHECKPROC(ALL_OK);
 
@@ -201,18 +202,7 @@ errors run_proc(Proc* proc)
 
 				break;
 			}
-			case CMD_REG_POP:
-			{
-				CHECKPROC(ALL_OK);
 
-				int arg = (int)proc->code[cur_cmd_num++];
-				proc->regs[arg] = stack_pop(proc->stk, &error);
-				proc_dump(proc, ALL_OK);
-				
-				CHECKPROC(ALL_OK);
-
-				break;
-			}
 			case CMD_POP:
 			{
 				CHECKPROC(ALL_OK);
@@ -224,7 +214,168 @@ errors run_proc(Proc* proc)
 
 				break;
 			}
+			
+			case CMD_REG_POP:
+			{
+				CHECKPROC(ALL_OK);
 
+				int reg_num = (int)proc->code[cur_cmd_num++];
+				proc->regs[reg_num] = stack_pop(proc->stk, &error);
+				proc_dump(proc, ALL_OK);
+				
+				CHECKPROC(ALL_OK);
+
+				break;
+			}
+
+			case CMD_IN:
+			{
+				CHECKPROC(ALL_OK);
+
+				elem_type value = 0;
+				scanf("" ELEM_SPECIFIER "", &value);
+				stack_push(proc->stk, value);
+				proc_dump(proc, ALL_OK);
+				
+				CHECKPROC(ALL_OK);
+
+				break;
+			} 
+
+			case CMD_ADD:
+			{
+				CHECKPROC(ALL_OK);
+
+				elem_type elem = stack_pop(proc->stk, &error);
+				if(error != ALL_OK)
+				{
+					print_parse_error(error, proc->file_with_errors);
+					break;
+				}
+
+				elem += stack_pop(proc->stk, &error);
+				if(error != ALL_OK)
+				{
+					print_parse_error(error, proc->file_with_errors);
+					break;
+				}
+
+				stack_push(proc->stk, elem);
+				proc_dump(proc, ALL_OK);
+				
+				CHECKPROC(ALL_OK);
+
+				break;
+			} 
+
+			case CMD_SUB:
+			{
+				CHECKPROC(ALL_OK);
+
+				elem_type elem = stack_pop(proc->stk, &error);
+				if(error != ALL_OK)
+				{
+					print_parse_error(error, proc->file_with_errors);
+					break;
+				}
+
+				elem -= stack_pop(proc->stk, &error);
+				if(error != ALL_OK)
+				{
+					print_parse_error(error, proc->file_with_errors);
+					break;
+				}
+
+				stack_push(proc->stk, elem);
+				proc_dump(proc, ALL_OK);
+				
+				CHECKPROC(ALL_OK);
+
+				break;
+			} 
+
+			case CMD_MUL:
+			{
+				CHECKPROC(ALL_OK);
+
+				elem_type elem = stack_pop(proc->stk, &error);
+				if(error != ALL_OK)
+				{
+					print_parse_error(error, proc->file_with_errors);
+					break;
+				}
+
+				elem *= stack_pop(proc->stk, &error);
+				if(error != ALL_OK)
+				{
+					print_parse_error(error, proc->file_with_errors);
+					break;
+				}
+
+				stack_push(proc->stk, elem);
+				proc_dump(proc, ALL_OK);
+				
+				CHECKPROC(ALL_OK);
+
+				break;
+			} 
+
+			case CMD_DIV:
+			{
+				CHECKPROC(ALL_OK);
+
+				elem_type elem = stack_pop(proc->stk, &error);
+				if(error != ALL_OK)
+				{
+					print_parse_error(error, proc->file_with_errors);
+					break;
+				}
+
+				elem_type second_elem = stack_pop(proc->stk, &error);
+				if(error != ALL_OK)
+				{
+					print_parse_error(error, proc->file_with_errors);
+					break;
+				}
+				if(!second_elem)
+				{
+					if(proc->file_with_errors == stderr || proc->file_with_errors == stdin)
+		                fprintf(proc->file_with_errors, RED "Division by zero" RST "\n");
+		            else
+		                fprintf(proc->file_with_errors, "Division by zero");
+
+		            break;
+				}
+
+				stack_push(proc->stk, elem / second_elem);
+				proc_dump(proc, ALL_OK);
+				
+				CHECKPROC(ALL_OK);
+
+				break;
+			} 
+
+			case CMD_OUT:
+			{
+				CHECKPROC(ALL_OK);
+
+				elem_type elem = stack_pop(proc->stk, &error);
+				stack_push(proc->stk, elem);
+				printf("elem = " ELEM_SPECIFIER "\n", elem);
+				proc_dump(proc, ALL_OK);
+				
+				CHECKPROC(ALL_OK);
+
+				break;
+			} 
+
+			case CMD_HLT:
+			{
+				cur_cmd_num = proc->n_commands;
+
+				break;
+			}	
+			
 		}
 	}
 

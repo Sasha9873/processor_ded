@@ -1,17 +1,21 @@
+in 
+in 
 in
-in
-in
-push 5
-push 10
-push 7
-pop rdx
-push rdx
 
 pop rcx   ; rcx = rdx = 7
 pop rbx	  ; rbx = 10
 pop rax   ; rax = 5
+
+push 4
+push rax
+push rcx
 mul
-div
+mul   ;4ac
+
+push rbx
+push rbx
+mul  ;b^2
+
+sub
 out
-pop
 hlt 

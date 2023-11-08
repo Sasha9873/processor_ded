@@ -231,6 +231,45 @@ size_t stack_ok(Stack* stk)
 
 }*/
 
+void print_parse_error(errors error, ...) //in va_args file_ptr
+{
+    va_list args;
+    va_start(args, error);
+    
+    FILE* file_ptr;
+    if(args)
+        file_ptr = va_arg(args, FILE*);
+    else
+        file_ptr = stderr;
+
+    va_end(args);
+
+
+    size_t n_errors = 0;
+    size_t error_mask = 1;
+    size_t n_bit = 0;
+
+    while(error)    
+    {
+        if(error & error_mask)
+        {
+            if(!n_errors)
+                fprintf(file_ptr, "\n\n");
+            if(file_ptr == stderr || file_ptr == stdin)
+                fprintf(file_ptr, RED "ERROR_%lu = -%lu. This means: %s" RST "\n", ++n_errors, n_bit, error_names[n_bit]);
+            else
+                fprintf(file_ptr, "ERROR_%lu = -%lu. This means: %s\n", ++n_errors, n_bit, error_names[n_bit]);
+
+            error -= error_mask;
+        }
+
+        ++n_bit;
+        error_mask <<= 1;
+    }
+
+    fprintf(file_ptr, "\n");
+}
+
 int stack_dump(Stack* stk, errors reason)
 {
     if(!stk || stk == (Stack*)BAD_PTR)
@@ -268,12 +307,6 @@ int stack_dump(Stack* stk, errors reason)
     #endif // STACK_USE_HASH
 
     fprintf(stk->file_with_errors, "Stack[%p]", stk);
-
-    /*errors error = stack_ok(stk);
-    if(error == ALL_OK)
-        fprintf(stk->file_with_errors, "(ok)\n");
-    else
-        fprintf(stk->file_with_errors, "\nERROR = %d. This means: %s\n", error, error_names[abs(error)]);*/
     
     size_t error = stack_ok(stk);
 
@@ -281,30 +314,7 @@ int stack_dump(Stack* stk, errors reason)
         fprintf(stk->file_with_errors, "(ok)\n");
     else
     {   
-        size_t n_errors = 0;
-        size_t error_mask = 1;
-        size_t n_bit = 0;
-
-        while(error)    
-        {
-
-            if(error & error_mask)
-            {
-                if(!n_errors)
-                    fprintf(stk->file_with_errors, "\n\n");
-                if(stk->file_with_errors == stderr || stk->file_with_errors == stdin)
-                    fprintf(stk->file_with_errors, RED "ERROR_%lu = -%lu. This means: %s" RST "\n", ++n_errors, n_bit, error_names[n_bit]);
-                else
-                    fprintf(stk->file_with_errors, "ERROR_%lu = -%lu. This means: %s\n", ++n_errors, n_bit, error_names[n_bit]);
-
-                error -= error_mask;
-            }
-
-            ++n_bit;
-            error_mask <<= 1;
-        }
-
-        fprintf(stk->file_with_errors, "\n");
+        print_parse_error(error, stk->file_with_errors);
     }
 
 

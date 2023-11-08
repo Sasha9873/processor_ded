@@ -31,7 +31,7 @@ int is_reg(char* str)
 		return 0;
 }
 
-void print_in_two_files(int n_numbers, FILE* first_file_ptr, FILE* second_file_ptr, ...)
+void print_in_two_files(int n_numbers, FILE* first_file_ptr, FILE* second_file_ptr, ...)  //args
 {
 	if(!first_file_ptr || !second_file_ptr)
 		return;
@@ -85,6 +85,9 @@ errors assemble(file_information* file_info)
 
 	for(size_t cur_str = 0; cur_str < file_info->n_strings; ++cur_str)
 	{
+		if(!file_info->text[cur_str])
+			break;
+		
 		if(!strncmp(file_info->text[cur_str], "push", MAX_COMMAND_LEN))
 		{
 			++cur_str;

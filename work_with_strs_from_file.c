@@ -102,21 +102,25 @@ size_t get_n_strings(char* buffer, size_t buff_size)
 	size_t n_strings = 0;
 	for(size_t i = 0; i < buff_size; ++i)
 	{
-		if(buffer[i] == '\n' || buffer[i] == ' ')
+		if(buffer[i] == '\n' || buffer[i] == ' ' || buffer[i] == '\t')
 		{
 			++n_strings;
-			if(i + 1 < buff_size)
-				//printf("cur sym <%c> n_strs = %d i = %d\n", buffer[i+1], n_strings, i);
 
-			while(i + 1 < buff_size && (buffer[i + 1] == '\n' || buffer[i + 1] == ' '))
+			while(i + 1 < buff_size && (buffer[i + 1] == '\n' || buffer[i + 1] == ' ' || buffer[i + 1] == '\t'))
 				++i;
+			if(i + 2 < buff_size && i + 1 < buff_size)
+				printf("cur sym <%c%c> n_strs = %d i = %d\n", buffer[i+1], buffer[i+2], n_strings, i);
+			else if(i + 1 < buff_size)
+				printf("cur sym <%c> n_strs = %d i = %d\n", buffer[i+1], n_strings, i);
 		}
 		else if(buffer[i] == ';')
 		{
-			if((i != 0) && buffer[i - 1] == ' ')
+			if((i != 0) && (buffer[i - 1] == ' ' || buffer[i - 1] == '\t'))
 				--n_strings;
 
 			while(i < buff_size &&  buffer[i] != '\n')
+				++i;
+			while(i + 1 < buff_size && (buffer[i + 1] == '\n' || buffer[i + 1] == ' ' || buffer[i + 1] == '\t'))
 				++i;
 			
 			++n_strings;
@@ -145,7 +149,7 @@ void parse_buffer(file_information* file_info, errors* error)
 
 	file_info->text = (char**)calloc(n_strings, sizeof(char*));
 
-	//printf("size = %ld %c %d n_strings = %ld\n", file_info->size, file_info->buffer[0], file_info->buffer[0], n_strings);
+	printf("size = %ld %c %d n_strings = %ld\n", file_info->size, file_info->buffer[0], file_info->buffer[0], n_strings);
 	
 
 	file_info->text[0] = buffer;
@@ -156,7 +160,7 @@ void parse_buffer(file_information* file_info, errors* error)
 		//printf("buffer[i %d] = <%c> buffer[i+1 %d] = <%c>\n", i, buffer[i], i + 1, buffer[i + 1]);
 
 
-		if(buffer[i] == '\n' || buffer[i] == ' ')
+		if(buffer[i] == '\n' || buffer[i] == ' ' || buffer[i] == '\t')
 		{
 			buffer[i] = '\0';
 
@@ -203,7 +207,7 @@ void parse_buffer(file_information* file_info, errors* error)
 	}
 
 	//if(cur_str)
-		//file_info->n_strings = cur_str - 1;
+		//file_info->n_strings = cur_str;
 
 	printf("after parse_buffer:\n");
 	for(size_t i = 0; i < file_info->n_strings; ++i)

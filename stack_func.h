@@ -7,6 +7,8 @@
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include <stdarg.h>
+
 
     #include "stack_struct.h"
     #include "errors_enum_naming.h"
@@ -121,5 +123,11 @@
      * @returns counted hash value.
      */
     long long stack_hash(Stack* stk, errors reason);
+
+    /**
+     * Parses error and prints in file which can be in va-args or in stderror
+     */
+    void print_parse_error(errors error, ...); //in va_args file_ptr
+
    
 #endif
