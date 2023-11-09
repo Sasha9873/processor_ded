@@ -1,0 +1,1021 @@
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 1
+   current size = 0
+
+   data[0x55aded2d68f8] = 0x55aded2d6940
+   {
+      begin data canary[0x55aded2d6940] = badc0ffee
+      [0](0x55aded2d6948) = 0
+      end data canary[0x55aded2d6950] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 1
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6940
+   {
+      begin data canary[0x55aded2d6940] = badc0ffee
+      *[0](0x55aded2d6948) = 1
+      end data canary[0x55aded2d6950] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 1
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6940
+   {
+      begin data canary[0x55aded2d6940] = badc0ffee
+      *[0](0x55aded2d6948) = 1
+      end data canary[0x55aded2d6950] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 1
+      *[1](0x55aded2d6d9c) = 2
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 1
+      *[1](0x55aded2d6d9c) = 2
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 3
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 1
+      *[1](0x55aded2d6d9c) = 2
+      *[2](0x55aded2d6da0) = 3
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 3
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 1
+      *[1](0x55aded2d6d9c) = 2
+      *[2](0x55aded2d6da0) = 3
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 1
+      *[1](0x55aded2d6d9c) = 2
+      [2](0x55aded2d6da0) = -666
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 1
+      *[1](0x55aded2d6d9c) = 2
+      [2](0x55aded2d6da0) = -666
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 1
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 1
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 0
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      [0](0x55aded2d6d98) = -666
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 0
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      [0](0x55aded2d6d98) = -666
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      *[1](0x55aded2d6d9c) = 1
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      *[1](0x55aded2d6d9c) = 1
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 3
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      *[1](0x55aded2d6d9c) = 1
+      *[2](0x55aded2d6da0) = 3
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 3
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      *[1](0x55aded2d6d9c) = 1
+      *[2](0x55aded2d6da0) = 3
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      *[1](0x55aded2d6d9c) = 1
+      [2](0x55aded2d6da0) = -666
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      *[1](0x55aded2d6d9c) = 1
+      [2](0x55aded2d6da0) = -666
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      *[1](0x55aded2d6d9c) = 3
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      *[1](0x55aded2d6d9c) = 3
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 4
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 0
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      [0](0x55aded2d6d98) = -666
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 0
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      [0](0x55aded2d6d98) = -666
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      *[1](0x55aded2d6d9c) = 2
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      *[1](0x55aded2d6d9c) = 2
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 3
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      *[1](0x55aded2d6d9c) = 2
+      *[2](0x55aded2d6da0) = 2
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 3
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      *[1](0x55aded2d6d9c) = 2
+      *[2](0x55aded2d6da0) = 2
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      *[1](0x55aded2d6d9c) = 2
+      [2](0x55aded2d6da0) = -666
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 4
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      *[1](0x55aded2d6d9c) = 2
+      [2](0x55aded2d6da0) = -666
+      [3](0x55aded2d6da4) = 0
+      end data canary[0x55aded2d6db0] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      *[1](0x55aded2d6d9c) = 4
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 2
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      *[1](0x55aded2d6d9c) = 4
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = 12
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 0
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      [0](0x55aded2d6d98) = -666
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 0
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      [0](0x55aded2d6d98) = -666
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = -8
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(495),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = -8
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_pop() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(539),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 0
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      [0](0x55aded2d6d98) = -666
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(424),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 0
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      [0](0x55aded2d6d98) = -666
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+
+Called from stack_push() at /home/fox/Desktop/infa/ded/processor_ded/third-party/stack_different_types/stack_func.c(487),
+Hash is ok
+Stack[0x55aded2d68d0](ok)
+{
+   stack_begin_canary = badc0ffee
+   capacity = 2
+   current size = 1
+
+   data[0x55aded2d68f8] = 0x55aded2d6d90
+   {
+      begin data canary[0x55aded2d6d90] = badc0ffee
+      *[0](0x55aded2d6d98) = -8
+      [1](0x55aded2d6d9c) = -666
+      end data canary[0x55aded2d6da8] = badded
+   }
+
+   file_with_stack_errors[0x55aded2d6920] = 0x55aded2d62a0
+   stack_end_canary = badded
+}
+

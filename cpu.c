@@ -114,10 +114,11 @@ size_t proc_ok(Proc* proc)
     if(!(proc->regs))
         error += 1 << abs(BAD_REGS_POINTER);
 
+    if(!(proc->stk))
+        error += 1 << abs(BAD_STK_POINTER);
+
     if(proc->cur_cmd_num >= proc->n_commands)
     	error += 1 << abs(CUR_BIGGER_N_CMD);
-
-    error += stack_ok(proc->stk);
 
     
     return error;
@@ -208,10 +209,11 @@ int proc_dump(Proc* proc, cpu_errors reason)
 	}
 
 	fprintf(proc->file_with_cpu_errors, "n_commands = %lu\n", proc->n_commands);
-	fprintf(proc->file_with_cpu_errors, "n_commands = %lu\n", proc->cur_cmd_num);
+	fprintf(proc->file_with_cpu_errors, "curr_command = %lu\n", proc->cur_cmd_num - 1);
 
 	
 	fprintf(proc->file_with_cpu_errors, "code[%p]:\n", proc->code);
+
 
 	if(proc->code)
 	{
@@ -228,11 +230,22 @@ int proc_dump(Proc* proc, cpu_errors reason)
 		}
 		fprintf(proc->file_with_cpu_errors, "\n");
 
+		for(size_t i = 0; proc->cur_cmd_num != 0 && i < proc->cur_cmd_num - 1; ++i)
+		{
+			fprintf(proc->file_with_cpu_errors, "---");
+		}
+		fprintf(proc->file_with_cpu_errors, "--^\n");
+
+
+
 	}
 
-	if(!(proc->stk->file_with_stack_errors))
-		proc->stk->file_with_stack_errors = proc->file_with_cpu_errors;
+	FILE* save_stk_file_with_errors = proc->stk->file_with_stack_errors;
+	proc->stk->file_with_stack_errors = proc->file_with_cpu_errors;
+	
 	stack_dump(proc->stk, reason);
+
+	proc->stk->file_with_stack_errors = save_stk_file_with_errors;
 	
 	fprintf(proc->file_with_cpu_errors, "}\n\n\n");
 
@@ -252,7 +265,7 @@ int run_proc(Proc* proc)
 	int cmd;
 	printf("%p\n", proc);
 
-	proc_dump(proc, ALL_OK);
+	CHECKPROC(ALL_OK);
 	while(proc->cur_cmd_num < proc->n_commands)
 	{
 		cmd = (int)proc->code[proc->cur_cmd_num++];
@@ -261,7 +274,7 @@ int run_proc(Proc* proc)
 		{
 			case CMD_PUSH:
 			{
-				CHECKPROC(ALL_OK);
+				//CHECKPROC(ALL_OK);
 
 				elem_type arg = (elem_type)proc->code[proc->cur_cmd_num++];
 				error = stack_push(proc->stk, arg);
@@ -273,7 +286,7 @@ int run_proc(Proc* proc)
 			
 			case CMD_REG_PUSH:
 			{
-				CHECKPROC(ALL_OK);
+				//CHECKPROC(ALL_OK);
 
 				int reg_num = (int)proc->code[proc->cur_cmd_num++];
 				stack_push(proc->stk, proc->regs[reg_num]);
@@ -285,10 +298,9 @@ int run_proc(Proc* proc)
 
 			case CMD_POP:
 			{
-				CHECKPROC(ALL_OK);
+				//CHECKPROC(ALL_OK);
 
 				stack_pop(proc->stk, &error);
-				proc_dump(proc, ALL_OK);
 				
 				CHECKPROC(ALL_OK);
 
@@ -297,11 +309,10 @@ int run_proc(Proc* proc)
 			
 			case CMD_REG_POP:
 			{
-				CHECKPROC(ALL_OK);
+				//CHECKPROC(ALL_OK);
 
 				int reg_num = (int)proc->code[proc->cur_cmd_num++];
 				proc->regs[reg_num] = stack_pop(proc->stk, &error);
-				proc_dump(proc, ALL_OK);
 				
 				CHECKPROC(ALL_OK);
 
@@ -310,12 +321,11 @@ int run_proc(Proc* proc)
 
 			case CMD_IN:
 			{
-				CHECKPROC(ALL_OK);
+				//CHECKPROC(ALL_OK);
 
 				elem_type value = 0;
 				scanf("" ELEM_SPECIFIER "", &value);
 				stack_push(proc->stk, value);
-				proc_dump(proc, ALL_OK);
 				
 				CHECKPROC(ALL_OK);
 
@@ -324,7 +334,7 @@ int run_proc(Proc* proc)
 
 			case CMD_ADD:
 			{
-				CHECKPROC(ALL_OK);
+				//CHECKPROC(ALL_OK);
 
 				elem_type elem = stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
@@ -341,7 +351,6 @@ int run_proc(Proc* proc)
 				}
 
 				stack_push(proc->stk, elem);
-				proc_dump(proc, ALL_OK);
 				
 				CHECKPROC(ALL_OK);
 
@@ -350,7 +359,7 @@ int run_proc(Proc* proc)
 
 			case CMD_SUB:
 			{
-				CHECKPROC(ALL_OK);
+				//CHECKPROC(ALL_OK);
 
 				elem_type elem = stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
@@ -367,7 +376,6 @@ int run_proc(Proc* proc)
 				}
 
 				stack_push(proc->stk, elem);
-				proc_dump(proc, ALL_OK);
 				
 				CHECKPROC(ALL_OK);
 
@@ -376,7 +384,7 @@ int run_proc(Proc* proc)
 
 			case CMD_MUL:
 			{
-				CHECKPROC(ALL_OK);
+				//CHECKPROC(ALL_OK);
 
 				elem_type elem = stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
@@ -393,7 +401,6 @@ int run_proc(Proc* proc)
 				}
 
 				stack_push(proc->stk, elem);
-				proc_dump(proc, ALL_OK);
 				
 				CHECKPROC(ALL_OK);
 
@@ -402,7 +409,7 @@ int run_proc(Proc* proc)
 
 			case CMD_DIV:
 			{
-				CHECKPROC(ALL_OK);
+				//CHECKPROC(ALL_OK);
 
 				elem_type elem = stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
@@ -428,7 +435,6 @@ int run_proc(Proc* proc)
 				}
 
 				stack_push(proc->stk, elem / second_elem);
-				proc_dump(proc, ALL_OK);
 				
 				CHECKPROC(ALL_OK);
 
@@ -440,11 +446,12 @@ int run_proc(Proc* proc)
 				CHECKPROC(ALL_OK);
 
 				elem_type elem = stack_pop(proc->stk, &error);
-				stack_push(proc->stk, elem);
-				printf("elem = " ELEM_SPECIFIER "\n", elem);
-				proc_dump(proc, ALL_OK);
-				
 				CHECKPROC(ALL_OK);
+				stack_push(proc->stk, elem);
+				CHECKPROC(ALL_OK);
+				printf("elem = " ELEM_SPECIFIER "\n", elem);
+				
+				//CHECKPROC(ALL_OK);
 
 				break;
 			} 
@@ -489,7 +496,8 @@ int main(int argc, char** argv)
 
 
 	Proc* proc = proc_ctor(&error, buffer, buff_size);
-	proc->file_with_cpu_errors = fopen("file_with_cpu_errors.txt", "wb");
+	//proc->file_with_cpu_errors = fopen("file_with_cpu_errors.txt", "wb");
+	proc->stk->file_with_stack_errors = fopen("file_with_stack_errors.txt", "wb");
 
 
 	run_proc(proc);
