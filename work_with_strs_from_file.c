@@ -51,12 +51,12 @@ char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error,
 		return NULL;
 	}
 
-	printf("%d %d %d\n", size, sizeof(char*), sizeof(buffer)/sizeof(buffer[0]));
+	printf("%lu %lu %lu\n", size, sizeof(char*), sizeof(buffer)/sizeof(buffer[0]));
 
 	fread(buffer, sizeof(char), size, file_ptr);
 	*buff_size = size;
 
-	printf("%d %d %d\n", size, sizeof(buffer), sizeof(buffer)/sizeof(buffer[0]));
+	printf("%lu %lu %lu\n", size, sizeof(buffer), sizeof(buffer)/sizeof(buffer[0]));
 	printf("buffer: \n<");
 	for(size_t i = 0; i < size; ++i)
 		printf("%d <%c>\n", buffer[i], buffer[i]);

@@ -74,7 +74,7 @@ errors assemble(file_information* file_info)
 		return error;
 	}
 
-	FILE* file_with_code = open_file("code.txt", "wb", &error);
+	FILE* file_with_code = open_file("code.out", "wb", &error);
 	if(error != ALL_OK)
 	{
 		fclose(file_to_write);

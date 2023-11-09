@@ -1,0 +1,3 @@
+[submodule "third-party/stack_different_types"]
+	path = third-party/stack_different_types
+	url = https://github.com/Sasha9873/stack_different_types.git

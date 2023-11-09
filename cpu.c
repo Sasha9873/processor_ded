@@ -1,13 +1,9 @@
-#include "stack_struct.h"
-#include "stack_func.h"
-#include "processor_struct.h"
-#include "commands.h"
-#include "work_with_strs_from_file.h"
+/*!\file
+*/
 
-#include <stdarg.h>
+#include "cpu.h" 
+Proc* proc_ctor(errors* error, ...) //can give char* buffer and its length in __VA_ARGS__
 
-
-Proc* proc_ctor(errors* error, ...)  //can give char* buffer and its length in __VA_ARGS__
 {
 	Proc* proc = (Proc*)calloc(1, sizeof(Proc));
 
@@ -76,10 +72,10 @@ Proc* proc_dtor(Proc* proc)
 	if(!proc)
 		return proc;
 	
-    if(proc->file_with_errors != proc->stk->file_with_errors)
+    if(proc->file_with_cpu_errors != proc->stk->file_with_stack_errors)
     {
-        fclose(proc->file_with_errors);
-        proc->file_with_errors = NULL;
+        fclose(proc->file_with_cpu_errors);
+        proc->file_with_cpu_errors = NULL;
     }
 
 	proc->stk = stack_dtor(proc->stk);
@@ -103,79 +99,163 @@ Proc* proc_dtor(Proc* proc)
     return proc;
 }
 
-int proc_dump(Proc* proc, errors reason)
+size_t proc_ok(Proc* proc)
 {
-	if(!(proc->file_with_errors))
+    size_t error = ALL_OK;
+    if(!proc)
     {
-        proc->file_with_errors = stderr;
+        error += 1 << abs(BAD_PROC_POINTER);
+        return error;
+    }
+    
+    if(!(proc->code))
+        error += 1 << abs(BAD_CODE_POINTER);
+    
+    if(!(proc->regs))
+        error += 1 << abs(BAD_REGS_POINTER);
+
+    if(proc->cur_cmd_num >= proc->n_commands)
+    	error += 1 << abs(CUR_BIGGER_N_CMD);
+
+    error += stack_ok(proc->stk);
+
+    
+    return error;
+
+}
+
+void print_parse_cpu_error(cpu_errors error, ...) //in va_args file_ptr
+{
+    va_list args;
+    va_start(args, error);
+    
+    FILE* file_ptr;
+    if(args)
+        file_ptr = va_arg(args, FILE*);
+    else
+        file_ptr = stderr;
+
+    va_end(args);
+
+
+    size_t n_cpu_errors = 0;
+    size_t error_mask = 1;
+    size_t n_bit = 0;
+
+    while(error)    
+    {
+        if(error & error_mask)
+        {
+            if(!n_cpu_errors)
+                fprintf(file_ptr, "\n\n");
+            if(file_ptr == stderr || file_ptr == stdin)
+                fprintf(file_ptr, RED "ERROR_%lu = -%lu. This means: %s" RST "\n", ++n_cpu_errors, n_bit, cpu_error_names[n_bit]);
+            else
+                fprintf(file_ptr, "ERROR_%lu = -%lu. This means: %s\n", ++n_cpu_errors, n_bit, cpu_error_names[n_bit]);
+
+            error -= error_mask;
+        }
+
+        ++n_bit;
+        error_mask <<= 1;
     }
 
-    fprintf(proc->file_with_errors, "Proc[%p]\n{\n", proc);
+    fprintf(file_ptr, "\n");
+}
+
+int proc_dump(Proc* proc, cpu_errors reason)
+{
+	if(!proc)
+    {
+    	fprintf(stderr, "Proc[%p]\n{\n}\n", proc);
+
+        return BAD_PROC_POINTER;
+    }
+
+	if(!(proc->file_with_cpu_errors))
+    {
+        proc->file_with_cpu_errors = stderr;
+    }
+
+    fprintf(proc->file_with_cpu_errors, "Proc[%p]", proc);
+
+    size_t error = proc_ok(proc);
+
+    if(error == ALL_OK)
+        fprintf(proc->file_with_cpu_errors, "(ok)\n");
+    else
+    {   
+        print_parse_cpu_error(error, proc->file_with_cpu_errors);
+    }
 
 
-	fprintf(proc->file_with_errors, "regs[%p]:\n", proc->regs);
+	fprintf(proc->file_with_cpu_errors, "{\nregs[%p]:\n", proc->regs);
 	if(proc->regs)
 	{
 		for(size_t i = 0; i < N_REGS; ++i)
 		{
-			fprintf(proc->file_with_errors, "%3ld", i);
+			fprintf(proc->file_with_cpu_errors, "%3ld", i);
 		}
 
-		fprintf(proc->file_with_errors, "\n");
+		fprintf(proc->file_with_cpu_errors, "\n");
 		
 		for(size_t i = 0; i < N_REGS; ++i)
 		{
-			fprintf(proc->file_with_errors, "%3d", proc->regs[i]);
+			fprintf(proc->file_with_cpu_errors, "%3d", proc->regs[i]);
 		}
-		fprintf(proc->file_with_errors, "\n");
+		fprintf(proc->file_with_cpu_errors, "\n");
 
 	}
 
-	fprintf(proc->file_with_errors, "n_commands = %ld\n", proc->n_commands);
+	fprintf(proc->file_with_cpu_errors, "n_commands = %lu\n", proc->n_commands);
+	fprintf(proc->file_with_cpu_errors, "n_commands = %lu\n", proc->cur_cmd_num);
+
 	
-	fprintf(proc->file_with_errors, "code[%p]:\n", proc->code);
+	fprintf(proc->file_with_cpu_errors, "code[%p]:\n", proc->code);
 
 	if(proc->code)
 	{
 		for(size_t i = 0; i < proc->n_commands; ++i)
 		{
-			fprintf(proc->file_with_errors, "%3ld", i);
+			fprintf(proc->file_with_cpu_errors, "%3ld", i);
 		}
 
-		fprintf(proc->file_with_errors, "\n");
+		fprintf(proc->file_with_cpu_errors, "\n");
 		
 		for(size_t i = 0; i < proc->n_commands; ++i)
 		{
-			fprintf(proc->file_with_errors, "%3d", proc->code[i]);
+			fprintf(proc->file_with_cpu_errors, "%3d", proc->code[i]);
 		}
-		fprintf(proc->file_with_errors, "\n");
+		fprintf(proc->file_with_cpu_errors, "\n");
 
 	}
 
-	proc->stk->file_with_errors = proc->file_with_errors;
+	if(!(proc->stk->file_with_stack_errors))
+		proc->stk->file_with_stack_errors = proc->file_with_cpu_errors;
 	stack_dump(proc->stk, reason);
 	
-	fprintf(proc->file_with_errors, "}\n");
+	fprintf(proc->file_with_cpu_errors, "}\n\n\n");
 
+	return ALL_OK;
 }
 
 
 
-errors run_proc(Proc* proc)
+int run_proc(Proc* proc)
 {
 	if(!proc)
 		return BAD_POINTER;
 
-	errors error = ALL_OK;
+	int error = ALL_OK;
 
-	size_t cur_cmd_num = 0;
+	proc->cur_cmd_num = 0;
 	int cmd;
 	printf("%p\n", proc);
 
 	proc_dump(proc, ALL_OK);
-	while(cur_cmd_num < proc->n_commands)
+	while(proc->cur_cmd_num < proc->n_commands)
 	{
-		cmd = (int)proc->code[cur_cmd_num++];
+		cmd = (int)proc->code[proc->cur_cmd_num++];
 
 		switch(cmd)
 		{
@@ -183,8 +263,8 @@ errors run_proc(Proc* proc)
 			{
 				CHECKPROC(ALL_OK);
 
-				elem_type arg = (elem_type)proc->code[cur_cmd_num++];
-				stack_push(proc->stk, arg);
+				elem_type arg = (elem_type)proc->code[proc->cur_cmd_num++];
+				error = stack_push(proc->stk, arg);
 				
 				CHECKPROC(ALL_OK);
 
@@ -195,7 +275,7 @@ errors run_proc(Proc* proc)
 			{
 				CHECKPROC(ALL_OK);
 
-				int reg_num = (int)proc->code[cur_cmd_num++];
+				int reg_num = (int)proc->code[proc->cur_cmd_num++];
 				stack_push(proc->stk, proc->regs[reg_num]);
 				
 				CHECKPROC(ALL_OK);
@@ -219,7 +299,7 @@ errors run_proc(Proc* proc)
 			{
 				CHECKPROC(ALL_OK);
 
-				int reg_num = (int)proc->code[cur_cmd_num++];
+				int reg_num = (int)proc->code[proc->cur_cmd_num++];
 				proc->regs[reg_num] = stack_pop(proc->stk, &error);
 				proc_dump(proc, ALL_OK);
 				
@@ -249,14 +329,14 @@ errors run_proc(Proc* proc)
 				elem_type elem = stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
 				{
-					print_parse_error(error, proc->file_with_errors);
+					print_parse_cpu_error(error, proc->file_with_cpu_errors);
 					break;
 				}
 
 				elem += stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
 				{
-					print_parse_error(error, proc->file_with_errors);
+					print_parse_cpu_error(error, proc->file_with_cpu_errors);
 					break;
 				}
 
@@ -275,14 +355,14 @@ errors run_proc(Proc* proc)
 				elem_type elem = stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
 				{
-					print_parse_error(error, proc->file_with_errors);
+					print_parse_cpu_error(error, proc->file_with_cpu_errors);
 					break;
 				}
 
 				elem -= stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
 				{
-					print_parse_error(error, proc->file_with_errors);
+					print_parse_cpu_error(error, proc->file_with_cpu_errors);
 					break;
 				}
 
@@ -301,14 +381,14 @@ errors run_proc(Proc* proc)
 				elem_type elem = stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
 				{
-					print_parse_error(error, proc->file_with_errors);
+					print_parse_cpu_error(error, proc->file_with_cpu_errors);
 					break;
 				}
 
 				elem *= stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
 				{
-					print_parse_error(error, proc->file_with_errors);
+					print_parse_cpu_error(error, proc->file_with_cpu_errors);
 					break;
 				}
 
@@ -327,22 +407,22 @@ errors run_proc(Proc* proc)
 				elem_type elem = stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
 				{
-					print_parse_error(error, proc->file_with_errors);
+					print_parse_cpu_error(error, proc->file_with_cpu_errors);
 					break;
 				}
 
 				elem_type second_elem = stack_pop(proc->stk, &error);
 				if(error != ALL_OK)
 				{
-					print_parse_error(error, proc->file_with_errors);
+					print_parse_cpu_error(error, proc->file_with_cpu_errors);
 					break;
 				}
 				if(!second_elem)
 				{
-					if(proc->file_with_errors == stderr || proc->file_with_errors == stdin)
-		                fprintf(proc->file_with_errors, RED "Division by zero" RST "\n");
+					if(proc->file_with_cpu_errors == stderr || proc->file_with_cpu_errors == stdin)
+		                fprintf(proc->file_with_cpu_errors, RED "Division by zero" RST "\n");
 		            else
-		                fprintf(proc->file_with_errors, "Division by zero");
+		                fprintf(proc->file_with_cpu_errors, "Division by zero");
 
 		            break;
 				}
@@ -371,7 +451,7 @@ errors run_proc(Proc* proc)
 
 			case CMD_HLT:
 			{
-				cur_cmd_num = proc->n_commands;
+				proc->cur_cmd_num = proc->n_commands;
 
 				break;
 			}	
@@ -382,7 +462,7 @@ errors run_proc(Proc* proc)
 	return error;
 }
 
-static const size_t MAX_FILE_NAME = 30;
+
 
 int main(int argc, char** argv)
 {
@@ -398,7 +478,7 @@ int main(int argc, char** argv)
 		//printf("file = %s\n", file_name);
 	}
 
-	errors error = ALL_OK;
+	int error = ALL_OK;
 	size_t buff_size = 0;
 	char* buffer = read_text_from_file_to_buff_for_proc(file_name, &error, &buff_size);
 	if(error != ALL_OK)
@@ -409,7 +489,7 @@ int main(int argc, char** argv)
 
 
 	Proc* proc = proc_ctor(&error, buffer, buff_size);
-	proc->file_with_errors = fopen("file_with_errors.txt", "wb");
+	proc->file_with_cpu_errors = fopen("file_with_cpu_errors.txt", "wb");
 
 
 	run_proc(proc);

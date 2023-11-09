@@ -7,7 +7,7 @@ project(assembler)
 
 set(SOURCE_EXE assembler.c)		# Установка переменной со списком исходников для исполняемого файла
 
-set(SOURCE_LIB work_with_strs_from_file.h work_with_strs_from_file.c stack_func.c stack_struct.h stack_func.h commands.h)			# То же самое, но для библиотеки
+set(SOURCE_LIB work_with_strs_from_file.h work_with_strs_from_file.c third-party/stack_different_types/stack_func.c third-party/stack_different_types/stack_struct.h third-party/stack_different_types/stack_func.h commands.h)			# То же самое, но для библиотеки
 
 add_library(asm STATIC ${SOURCE_LIB})	# Создание статической библиотеки с именем bmp
 
