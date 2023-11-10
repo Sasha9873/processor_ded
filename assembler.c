@@ -1,3 +1,6 @@
+/*!\file
+*/
+
 #include "work_with_strs_from_file.h"
 #include "commands.h"
 

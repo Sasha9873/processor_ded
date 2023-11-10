@@ -109,9 +109,9 @@ size_t get_n_strings(char* buffer, size_t buff_size)
 			while(i + 1 < buff_size && (buffer[i + 1] == '\n' || buffer[i + 1] == ' ' || buffer[i + 1] == '\t'))
 				++i;
 			if(i + 2 < buff_size && i + 1 < buff_size)
-				printf("cur sym <%c%c> n_strs = %d i = %d\n", buffer[i+1], buffer[i+2], n_strings, i);
+				printf("cur sym <%c%c> n_strs = %lu i = %lu\n", buffer[i+1], buffer[i+2], n_strings, i);
 			else if(i + 1 < buff_size)
-				printf("cur sym <%c> n_strs = %d i = %d\n", buffer[i+1], n_strings, i);
+				printf("cur sym <%c> n_strs = %lu i = %lu\n", buffer[i+1], n_strings, i);
 		}
 		else if(buffer[i] == ';')
 		{

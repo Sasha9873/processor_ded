@@ -1,0 +1,19 @@
+;Disasembly of code.out
+
+in
+in
+in
+pop rcx
+pop rbx
+pop rax
+push 4
+push rax
+push rcx
+mul
+mul
+push rbx
+push rbx
+mul
+sub
+out
+hlt
