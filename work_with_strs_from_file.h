@@ -21,7 +21,7 @@ typedef struct file_information{
 
 
 file_information* read_text_from_file_to_buff(const char* file_name, errors* error);  ///< ' ' also means new str
-char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, size_t* buff_size);
+int* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, size_t* buff_size);
 size_t get_file_size(FILE* file_ptr);
 FILE* open_file(const char* file_name, const char* mode, errors* error);
 void parse_buffer(file_information* file_info, errors* error);

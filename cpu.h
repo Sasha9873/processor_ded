@@ -15,6 +15,16 @@
 	static const size_t MAX_FILE_NAME = 30;
 
 
+	#define RED "\033[0;31m"
+    #define RST "\x1b[0m" 
+    #define GREEN "\033[0;32m"
+    #define ORANGE "\033[0;33m"
+    #define BLUE "\033[0;34m"
+    #define GREY "\033[0;2m"
+
+    #define BOLD "\033[0;1m"
+
+
 	/**
      * Creates(allocates memory) data(massif with numbers which we push and pop from stack).
      *

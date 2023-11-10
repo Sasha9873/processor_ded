@@ -2,6 +2,9 @@
 #include "commands.h"
 
 #include <stdarg.h>
+#include <unistd.h>
+#include <stdio.h>
+
 
 static const int MAX_FILE_NAME = 30;
 static const int MAX_COMMAND_LEN = 10;
@@ -16,7 +19,7 @@ int is_reg(char* str)
 	{
 		if(str[i] != ' ' && str[i] != '\n' && str[i] != '\t')
 		{
-			printf("str[%d] = <%c> aaaaa\n", i, str[i]);
+			printf("str[%lu] = <%c> aaaaa\n", i, str[i]);
 			return 0;
 		}
 	}
@@ -63,6 +66,39 @@ void print_in_two_files(int n_numbers, FILE* first_file_ptr, FILE* second_file_p
 	va_end(args);
 }
 
+errors print_in_file_and_buff(size_t n_numbers, FILE* file_ptr, int* buffer, size_t* index, ...)  //args
+{
+	if(!file_ptr || !buffer)
+		return BAD_POINTER;
+
+	va_list args;
+	va_start(args, index);
+
+
+	if(n_numbers)
+	{
+		if(!args)
+			return BAD_POINTER;
+
+		int val = va_arg(args, int);
+
+		fprintf(file_ptr, "%d", val);
+		buffer[(*index)++] = val;
+	}
+		
+	while(--n_numbers && args)
+	{
+		int val = va_arg(args, int);
+
+		fprintf(file_ptr, " %d", val);
+		buffer[(*index)++] = val;
+	}
+
+	fprintf(file_ptr, "\n");
+
+	va_end(args);
+}
+
 errors assemble(file_information* file_info)
 {
 	errors error = ALL_OK;
@@ -83,6 +119,10 @@ errors assemble(file_information* file_info)
 	}
 
 
+	int* buffer = calloc(file_info->n_strings, sizeof(int));
+	size_t index = 0;
+
+
 	for(size_t cur_str = 0; cur_str < file_info->n_strings; ++cur_str)
 	{
 		if(!file_info->text[cur_str])
@@ -96,7 +136,7 @@ errors assemble(file_information* file_info)
 			{
 				// fprintf(file_to_write, "%d %d\n", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
 				// fprintf(file_with_code, "%d%d", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
-				print_in_two_files(2, file_to_write, file_with_code, CMD_REG_PUSH, file_info->text[cur_str][1] - 'a');
+				print_in_file_and_buff(2, file_to_write, buffer, &index, CMD_REG_PUSH, file_info->text[cur_str][1] - 'a');
 			}
 			else
 			{
@@ -107,7 +147,7 @@ errors assemble(file_information* file_info)
 
 				// fprintf(file_to_write, "%d %d\n", CMD_PUSH, arg);
 				// fprintf(file_with_code, "%d%d", CMD_PUSH, arg);
-				print_in_two_files(2, file_to_write, file_with_code, CMD_PUSH, arg);
+				print_in_file_and_buff(2, file_to_write, buffer, &index, CMD_PUSH, arg);
 			}	
 		}
 
@@ -118,13 +158,13 @@ errors assemble(file_information* file_info)
 				++cur_str;
 				// fprintf(file_to_write, "%d %d\n", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
 				// fprintf(file_with_code, "%d%d", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
-				print_in_two_files(2, file_to_write, file_with_code, CMD_REG_POP, file_info->text[cur_str][1] - 'a');
+				print_in_file_and_buff(2, file_to_write, buffer, &index, CMD_REG_POP, file_info->text[cur_str][1] - 'a');
 			}
 			else
 			{
 			// 	fprintf(file_to_write, "%d\n", CMD_POP);
 			// 	fprintf(file_with_code, "%d", CMD_POP);
-				print_in_two_files(1, file_to_write, file_with_code, CMD_POP);
+				print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_POP);
 			}
 		}
 
@@ -132,44 +172,44 @@ errors assemble(file_information* file_info)
 		{
 			// fprintf(file_to_write, "%d\n", CMD_HLT);
 			// fprintf(file_with_code, "%d", CMD_HLT);
-			print_in_two_files(1, file_to_write, file_with_code, CMD_HLT);
+			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_HLT);
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "add", MAX_COMMAND_LEN))
 		{
 			//fprintf(file_to_write, "%d\n", CMD_ADD);
 			//fprintf(file_with_code, "%d", CMD_ADD);
-			print_in_two_files(1, file_to_write, file_with_code, CMD_ADD);
+			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_ADD);
 		}
 		
 		else if(!strncmp(file_info->text[cur_str], "sub", MAX_COMMAND_LEN))
 		{
 			//fprintf(file_to_write, "%d\n", CMD_SUB);
-			print_in_two_files(1, file_to_write, file_with_code, CMD_SUB);
+			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_SUB);
 		}
 		
 		else if(!strncmp(file_info->text[cur_str], "mul", MAX_COMMAND_LEN))
 		{
 			//fprintf(file_to_write, "%d\n", CMD_MUL);
-			print_in_two_files(1, file_to_write, file_with_code, CMD_MUL);
+			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_MUL);
 		}
 		
 		else if(!strncmp(file_info->text[cur_str], "div", MAX_COMMAND_LEN))
 		{
 			//fprintf(file_to_write, "%d\n", CMD_DIV);
-			print_in_two_files(1, file_to_write, file_with_code, CMD_DIV);
+			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_DIV);
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "in", MAX_COMMAND_LEN))
 		{
 			//fprintf(file_to_write, "%d\n", CMD_IN);
-			print_in_two_files(1, file_to_write, file_with_code, CMD_IN);
+			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_IN);
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "out", MAX_COMMAND_LEN))
 		{
 			//fprintf(file_to_write, "%d\n", CMD_OUT);
-			print_in_two_files(1, file_to_write, file_with_code, CMD_OUT);
+			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_OUT);
 		}
 
 		else
@@ -180,6 +220,13 @@ errors assemble(file_information* file_info)
 
 
 	fclose(file_to_write);
+
+	fprintf(stderr, "buffer:\n");
+	for(size_t i = 0; i < index; ++i)
+		fprintf(stderr, "%d ", buffer[i]);
+
+	write(fileno(file_with_code), buffer, index * sizeof(int));
+
 	fclose(file_with_code);
 
 	return error;

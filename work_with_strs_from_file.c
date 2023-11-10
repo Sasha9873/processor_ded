@@ -30,7 +30,7 @@ FILE* open_file(const char* file_name, const char* mode, errors* error)
 	return file_ptr;
 }
 
-char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, size_t* buff_size)
+int* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, size_t* buff_size)
 {	
 	FILE* file_ptr = open_file(file_name, "rb", error);
 	if(!file_ptr)
@@ -43,7 +43,7 @@ char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error,
 
 
 	//char* buffer = (int*)calloc(size + 1, sizeof(char)); 
-	char* buffer = (char*)calloc(size, sizeof(char)); 
+	int* buffer = (int*)calloc(size, sizeof(int)); 
 	if(!buffer)
 	{
 		fclose(file_ptr);
@@ -53,7 +53,7 @@ char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error,
 
 	printf("%lu %lu %lu\n", size, sizeof(char*), sizeof(buffer)/sizeof(buffer[0]));
 
-	fread(buffer, sizeof(char), size, file_ptr);
+	fread(buffer, sizeof(int), size, file_ptr);
 	*buff_size = size;
 
 	printf("%lu %lu %lu\n", size, sizeof(buffer), sizeof(buffer)/sizeof(buffer[0]));

@@ -44,6 +44,7 @@ Proc* proc_ctor(errors* error, ...) //can give char* buffer and its length in __
 
     proc->code = NULL;
     proc->n_commands = 0;
+    proc->cur_cmd_num = 0;
 
     va_list args;
 	va_start(args, error);
@@ -82,15 +83,23 @@ Proc* proc_dtor(Proc* proc)
 		
     if(proc->regs)
     {
+    	for(size_t i = 0; i < N_REGS; ++i)
+    		proc->regs[i] = POISON;
     	free(proc->regs);
     	proc->regs = NULL;
     }	
 
     if(proc->code)
     {
+    	for(size_t i = 0; i < proc->n_commands; ++i)
+    		proc->code[i] = POISON;
+
     	free(proc->code);
     	proc->code = NULL;
     }
+    
+    proc->n_commands = POISON;
+    proc->cur_cmd_num = POISON;
 
 
     free(proc);
@@ -164,6 +173,20 @@ void print_parse_cpu_error(cpu_errors error, ...) //in va_args file_ptr
     fprintf(file_ptr, "\n");
 }
 
+void set_colour_cpu_code(Proc* proc, size_t curr_num)
+{
+	if(curr_num == ((proc->cur_cmd_num > 0) ? proc->cur_cmd_num - 1 : 0))
+		fprintf(proc->file_with_cpu_errors, BOLD GREEN);
+	else if(curr_num > ((proc->cur_cmd_num > 0) ? proc->cur_cmd_num - 1 : 0))
+	{
+		fprintf(proc->file_with_cpu_errors, GREY);
+	}
+	else if(curr_num < ((proc->cur_cmd_num > 0) ? proc->cur_cmd_num - 1 : 0))
+	{
+		fprintf(proc->file_with_cpu_errors, BLUE);
+	}
+}
+
 int proc_dump(Proc* proc, cpu_errors reason)
 {
 	if(!proc)
@@ -190,7 +213,7 @@ int proc_dump(Proc* proc, cpu_errors reason)
     }
 
 
-	fprintf(proc->file_with_cpu_errors, "{\nregs[%p]:\n", proc->regs);
+	fprintf(proc->file_with_cpu_errors, "{\n\nregs[%p]:\n", proc->regs);
 	if(proc->regs)
 	{
 		for(size_t i = 0; i < N_REGS; ++i)
@@ -204,15 +227,15 @@ int proc_dump(Proc* proc, cpu_errors reason)
 		{
 			fprintf(proc->file_with_cpu_errors, "%3d", proc->regs[i]);
 		}
-		fprintf(proc->file_with_cpu_errors, "\n");
+		fprintf(proc->file_with_cpu_errors, "\n\n");
 
 	}
 
 	fprintf(proc->file_with_cpu_errors, "n_commands = %lu\n", proc->n_commands);
-	fprintf(proc->file_with_cpu_errors, "curr_command = %lu\n", proc->cur_cmd_num - 1);
+	fprintf(proc->file_with_cpu_errors, "curr_command = %lu\n", (proc->cur_cmd_num > 0) ? proc->cur_cmd_num - 1 : 0);
 
 	
-	fprintf(proc->file_with_cpu_errors, "code[%p]:\n", proc->code);
+	fprintf(proc->file_with_cpu_errors, "\ncode[%p]:\n", proc->code);
 
 
 	if(proc->code)
@@ -226,15 +249,17 @@ int proc_dump(Proc* proc, cpu_errors reason)
 		
 		for(size_t i = 0; i < proc->n_commands; ++i)
 		{
+			set_colour_cpu_code(proc, i);
+
 			fprintf(proc->file_with_cpu_errors, "%3d", proc->code[i]);
 		}
-		fprintf(proc->file_with_cpu_errors, "\n");
+		fprintf(proc->file_with_cpu_errors, RST "\n");
 
 		for(size_t i = 0; proc->cur_cmd_num != 0 && i < proc->cur_cmd_num - 1; ++i)
 		{
 			fprintf(proc->file_with_cpu_errors, "---");
 		}
-		fprintf(proc->file_with_cpu_errors, "--^\n");
+		fprintf(proc->file_with_cpu_errors, "--^\n\n");
 
 
 
@@ -487,7 +512,7 @@ int main(int argc, char** argv)
 
 	int error = ALL_OK;
 	size_t buff_size = 0;
-	char* buffer = read_text_from_file_to_buff_for_proc(file_name, &error, &buff_size);
+	int* buffer = read_text_from_file_to_buff_for_proc(file_name, &error, &buff_size);
 	if(error != ALL_OK)
 	{
 		fprintf(stderr, RED "error = %d\n" RST, error);
