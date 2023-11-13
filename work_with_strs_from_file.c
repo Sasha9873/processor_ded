@@ -147,7 +147,7 @@ void parse_buffer(file_information* file_info, errors* error)
 	size_t n_strings = get_n_strings(buffer, file_info->size);
 	file_info->n_strings = n_strings;
 
-	file_info->text = (char**)calloc(n_strings, sizeof(char*));
+	file_info->text = (char**)calloc(n_strings + 1, sizeof(char*));
 
 	printf("size = %ld %c %d n_strings = %ld\n", file_info->size, file_info->buffer[0], file_info->buffer[0], n_strings);
 	

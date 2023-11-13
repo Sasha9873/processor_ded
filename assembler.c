@@ -3,8 +3,37 @@
 
 #include "assembler.h"
 
+#define GENERATE_CMD(name, num, ...)\
+	if(!(strcasecmp(file_info->text[cur_str], #name)))     \
+	{								\
+		int arg = 0;				\
+			fprintf(stderr, "cur_str = %d max = %d str = %s %d %d %d\n", cur_str, file_info->n_strings, file_info->text[cur_str], num, arg_mask, num & arg_mask);\
+		if(is_reg(file_info->text[cur_str + 1]))				\
+		{ \
+			++cur_str; \
+			print_in_file_and_buff(2, file_to_write, buffer, &index, num + reg_mask, file_info->text[cur_str][1] - 'a'); \
+		} \
+		else if((num & arg_mask))		\
+		{							\
+			++cur_str;	\
+			arg = atoi(file_info->text[cur_str]);  \
+			if(arg == 0 && file_info->text[cur_str][0] != '0')  \
+					fprintf(stderr, RED "Wrong reg, you have written: %s\n" RST, file_info->text[cur_str]);	\
+			print_in_file_and_buff(2, file_to_write, buffer, &index, num + arg_mask, arg);	\
+		}	\
+		else  \
+		{	\
+			print_in_file_and_buff(1, file_to_write, buffer, &index, num);	\
+		}	\
+	}\
+	else 
+
+
 int is_reg(char* str)
 {
+	if(!str)
+		return 0;
+
 	if(strlen(str) < 3)
 		return 0;
 
@@ -102,6 +131,10 @@ errors print_in_file_with_byte_code(FILE* file_with_code, char* buffer, size_t i
 
 }
 
+
+
+
+
 errors assemble(file_information* file_info)
 {
 	errors error = ALL_OK;
@@ -131,75 +164,9 @@ errors assemble(file_information* file_info)
 		if(!file_info->text[cur_str])
 			break;
 		
-		if(!strncmp(file_info->text[cur_str], "push", MAX_COMMAND_LEN))
-		{
-			++cur_str;
+		#include "commands_dsl.h"
 
-			if(is_reg(file_info->text[cur_str]))
-			{
-				print_in_file_and_buff(2, file_to_write, buffer, &index, CMD_REG_PUSH, file_info->text[cur_str][1] - 'a');
-			}
-			else
-			{
-				int arg = atoi(file_info->text[cur_str]);
-
-				if(arg == 0 && file_info->text[cur_str][0] != '0')
-					fprintf(stderr, RED "Wrong reg, you have written: %s\n" RST, file_info->text[cur_str]);
-
-				print_in_file_and_buff(2, file_to_write, buffer, &index, CMD_PUSH, arg);
-			}	
-		}
-
-		else if(!strncmp(file_info->text[cur_str], "pop", MAX_COMMAND_LEN))
-		{
-			if(is_reg(file_info->text[cur_str + 1]))
-			{
-				++cur_str;
-
-				print_in_file_and_buff(2, file_to_write, buffer, &index, CMD_REG_POP, file_info->text[cur_str][1] - 'a');
-			}
-			else
-			{
-				print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_POP);
-			}
-		}
-
-		else if(!strncmp(file_info->text[cur_str], "hlt", MAX_COMMAND_LEN))
-		{
-			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_HLT);
-		}
-
-		else if(!strncmp(file_info->text[cur_str], "add", MAX_COMMAND_LEN))
-		{
-			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_ADD);
-		}
-		
-		else if(!strncmp(file_info->text[cur_str], "sub", MAX_COMMAND_LEN))
-		{
-			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_SUB);
-		}
-		
-		else if(!strncmp(file_info->text[cur_str], "mul", MAX_COMMAND_LEN))
-		{
-			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_MUL);
-		}
-		
-		else if(!strncmp(file_info->text[cur_str], "div", MAX_COMMAND_LEN))
-		{
-			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_DIV);
-		}
-
-		else if(!strncmp(file_info->text[cur_str], "in", MAX_COMMAND_LEN))
-		{
-			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_IN);
-		}
-
-		else if(!strncmp(file_info->text[cur_str], "out", MAX_COMMAND_LEN))
-		{
-			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_OUT);
-		}
-
-		else
+		/*else*/
 		{
 			fprintf(stderr, RED "Unknown command: <%s>\n" RST, file_info->text[cur_str]);
 		}
@@ -215,9 +182,11 @@ errors assemble(file_information* file_info)
 	print_in_file_with_byte_code(file_with_code, buffer, index);
 
 	fclose(file_with_code);
+	free(buffer);
 
 	return error;
 }
+
 
 int main(int argc, char** argv)
 {
@@ -264,3 +233,5 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+
+#undef GENERATE_CMD

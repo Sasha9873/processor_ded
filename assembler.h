@@ -17,5 +17,7 @@
 	static const int N_REGS = 4;
 
 	static const int VERSION = 1;  //commands version
+	static const int arg_mask = 0b10000;
+	static const int reg_mask = 0b100000;
 
 #endif
