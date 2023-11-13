@@ -7,13 +7,13 @@
 	#include "third-party/stack_different_types/stack_struct.h"
 	#include "third-party/stack_different_types/stack_func.h"
 	#include "processor_struct.h"
-	#include "commands_cpu.h"
+	#include "commands.h"
 	#include "work_with_strs_from_file.h"
 
 	#include <stdarg.h>
 
 	static const size_t MAX_FILE_NAME = 30;
-
+	static const int VERSION = 1;  //commands version
 
 	#define RED "\033[0;31m"
     #define RST "\x1b[0m" 

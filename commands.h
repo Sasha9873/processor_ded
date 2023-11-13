@@ -18,6 +18,4 @@
 		CMD_REG_PUSH = 10,
     } commands;
 
-    static const int VERSION = 1;  //commands version
-
 #endif
