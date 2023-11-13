@@ -53,8 +53,8 @@ int* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, 
 
 	printf("%lu %lu %lu\n", size, sizeof(char*), sizeof(buffer)/sizeof(buffer[0]));
 
-	fread(buffer, sizeof(int), size, file_ptr);
 	*buff_size = size;
+	fread(buffer, sizeof(char), *buff_size, file_ptr);
 
 	printf("%lu %lu %lu\n", size, sizeof(buffer), sizeof(buffer)/sizeof(buffer[0]));
 	printf("buffer: \n<");

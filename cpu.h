@@ -7,7 +7,7 @@
 	#include "third-party/stack_different_types/stack_struct.h"
 	#include "third-party/stack_different_types/stack_func.h"
 	#include "processor_struct.h"
-	#include "commands.h"
+	#include "commands_cpu.h"
 	#include "work_with_strs_from_file.h"
 
 	#include <stdarg.h>

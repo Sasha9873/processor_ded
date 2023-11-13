@@ -1,17 +1,7 @@
 /*!\file
 */
 
-#include "work_with_strs_from_file.h"
-#include "commands.h"
-
-#include <stdarg.h>
-#include <unistd.h>
-#include <stdio.h>
-
-
-static const int MAX_FILE_NAME = 30;
-static const int MAX_COMMAND_LEN = 10;
-static const int N_REGS = 4;
+#include "assembler.h"
 
 int is_reg(char* str)
 {
@@ -69,7 +59,7 @@ void print_in_two_files(int n_numbers, FILE* first_file_ptr, FILE* second_file_p
 	va_end(args);
 }
 
-errors print_in_file_and_buff(size_t n_numbers, FILE* file_ptr, int* buffer, size_t* index, ...)  //args
+errors print_in_file_and_buff(size_t n_numbers, FILE* file_ptr, char* buffer, size_t* index, ...)  //args
 {
 	if(!file_ptr || !buffer)
 		return BAD_POINTER;
@@ -102,6 +92,16 @@ errors print_in_file_and_buff(size_t n_numbers, FILE* file_ptr, int* buffer, siz
 	va_end(args);
 }
 
+errors print_in_file_with_byte_code(FILE* file_with_code, char* buffer, size_t index)
+{
+	if(!file_with_code || !buffer)
+		return BAD_POINTER;
+
+	write(fileno(file_with_code), &VERSION, sizeof(char));
+	write(fileno(file_with_code), buffer, index * sizeof(char));
+
+}
+
 errors assemble(file_information* file_info)
 {
 	errors error = ALL_OK;
@@ -122,7 +122,7 @@ errors assemble(file_information* file_info)
 	}
 
 
-	int* buffer = calloc(file_info->n_strings, sizeof(int));
+	char* buffer = calloc(file_info->n_strings, sizeof(char));
 	size_t index = 0;
 
 
@@ -228,7 +228,7 @@ errors assemble(file_information* file_info)
 	for(size_t i = 0; i < index; ++i)
 		fprintf(stderr, "%d ", buffer[i]);
 
-	write(fileno(file_with_code), buffer, index * sizeof(int));
+	print_in_file_with_byte_code(file_with_code, buffer, index);
 
 	fclose(file_with_code);
 

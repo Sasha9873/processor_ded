@@ -14,6 +14,7 @@
                             BAD_REGS_POINTER   = -3,  //
                             CUR_BIGGER_N_CMD   = -4,   //
                             BAD_STK_POINTER    = -5,
+                            WRONG_CMD_VERSION  = -6,
     } cpu_errors;
 
     static const char *cpu_error_names[] = {
@@ -23,6 +24,7 @@
         "Bad regs pointer",
         "Curr cmd number bigger then amount of commands",    //4
         "Bad stack pointer",
+        "Wrong commands version",
     };
 
 #endif

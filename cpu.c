@@ -75,7 +75,8 @@ Proc* proc_dtor(Proc* proc)
 	
     if(proc->file_with_cpu_errors != proc->stk->file_with_stack_errors)
     {
-        fclose(proc->file_with_cpu_errors);
+    	if(proc->file_with_cpu_errors)
+        	fclose(proc->file_with_cpu_errors);
         proc->file_with_cpu_errors = NULL;
     }
 
@@ -288,7 +289,11 @@ int run_proc(Proc* proc)
 
 	proc->cur_cmd_num = 0;
 	int cmd;
-	printf("%p\n", proc);
+	printf("%p version = %d\n", proc, proc->code[0]);
+
+	if(proc->code[0] != VERSION)
+		return WRONG_CMD_VERSION;
+	++(proc->cur_cmd_num);
 
 	CHECKPROC(ALL_OK);
 	while(proc->cur_cmd_num < proc->n_commands)
@@ -502,7 +507,7 @@ int main(int argc, char** argv)
 
 	if(argc < 2)  //no file name
 	{
-		strncpy(file_name, "code.txt", MAX_FILE_NAME - 1);
+		strncpy(file_name, "code.out", MAX_FILE_NAME - 1);
 	}
 	else
 	{
@@ -529,6 +534,6 @@ int main(int argc, char** argv)
 
 
 	proc_dtor(proc);
-
+/**/
 	return 0;
 }
