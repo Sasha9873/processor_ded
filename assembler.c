@@ -137,8 +137,6 @@ errors assemble(file_information* file_info)
 
 			if(is_reg(file_info->text[cur_str]))
 			{
-				// fprintf(file_to_write, "%d %d\n", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
-				// fprintf(file_with_code, "%d%d", CMD_PUSH, file_info->text[cur_str][1] - 'a' + 1);
 				print_in_file_and_buff(2, file_to_write, buffer, &index, CMD_REG_PUSH, file_info->text[cur_str][1] - 'a');
 			}
 			else
@@ -148,8 +146,6 @@ errors assemble(file_information* file_info)
 				if(arg == 0 && file_info->text[cur_str][0] != '0')
 					fprintf(stderr, RED "Wrong reg, you have written: %s\n" RST, file_info->text[cur_str]);
 
-				// fprintf(file_to_write, "%d %d\n", CMD_PUSH, arg);
-				// fprintf(file_with_code, "%d%d", CMD_PUSH, arg);
 				print_in_file_and_buff(2, file_to_write, buffer, &index, CMD_PUSH, arg);
 			}	
 		}
@@ -159,59 +155,47 @@ errors assemble(file_information* file_info)
 			if(is_reg(file_info->text[cur_str + 1]))
 			{
 				++cur_str;
-				// fprintf(file_to_write, "%d %d\n", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
-				// fprintf(file_with_code, "%d%d", CMD_POP, file_info->text[cur_str][1] - 'a' + 1);
+
 				print_in_file_and_buff(2, file_to_write, buffer, &index, CMD_REG_POP, file_info->text[cur_str][1] - 'a');
 			}
 			else
 			{
-			// 	fprintf(file_to_write, "%d\n", CMD_POP);
-			// 	fprintf(file_with_code, "%d", CMD_POP);
 				print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_POP);
 			}
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "hlt", MAX_COMMAND_LEN))
 		{
-			// fprintf(file_to_write, "%d\n", CMD_HLT);
-			// fprintf(file_with_code, "%d", CMD_HLT);
 			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_HLT);
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "add", MAX_COMMAND_LEN))
 		{
-			//fprintf(file_to_write, "%d\n", CMD_ADD);
-			//fprintf(file_with_code, "%d", CMD_ADD);
 			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_ADD);
 		}
 		
 		else if(!strncmp(file_info->text[cur_str], "sub", MAX_COMMAND_LEN))
 		{
-			//fprintf(file_to_write, "%d\n", CMD_SUB);
 			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_SUB);
 		}
 		
 		else if(!strncmp(file_info->text[cur_str], "mul", MAX_COMMAND_LEN))
 		{
-			//fprintf(file_to_write, "%d\n", CMD_MUL);
 			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_MUL);
 		}
 		
 		else if(!strncmp(file_info->text[cur_str], "div", MAX_COMMAND_LEN))
 		{
-			//fprintf(file_to_write, "%d\n", CMD_DIV);
 			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_DIV);
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "in", MAX_COMMAND_LEN))
 		{
-			//fprintf(file_to_write, "%d\n", CMD_IN);
 			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_IN);
 		}
 
 		else if(!strncmp(file_info->text[cur_str], "out", MAX_COMMAND_LEN))
 		{
-			//fprintf(file_to_write, "%d\n", CMD_OUT);
 			print_in_file_and_buff(1, file_to_write, buffer, &index, CMD_OUT);
 		}
 
