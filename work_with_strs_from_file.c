@@ -30,7 +30,7 @@ FILE* open_file(const char* file_name, const char* mode, errors* error)
 	return file_ptr;
 }
 
-int* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, size_t* buff_size)
+char* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, size_t* buff_size)
 {	
 	FILE* file_ptr = open_file(file_name, "rb", error);
 	if(!file_ptr)
@@ -43,7 +43,7 @@ int* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, 
 
 
 	//char* buffer = (int*)calloc(size + 1, sizeof(char)); 
-	int* buffer = (int*)calloc(size, sizeof(int)); 
+	char* buffer = (char*)calloc(size, sizeof(char)); 
 	if(!buffer)
 	{
 		fclose(file_ptr);
@@ -57,7 +57,7 @@ int* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, 
 	fread(buffer, sizeof(char), *buff_size, file_ptr);
 
 	printf("%lu %lu %lu\n", size, sizeof(buffer), sizeof(buffer)/sizeof(buffer[0]));
-	printf("buffer: \n<");
+	printf("1)buffer: \n<");
 	for(size_t i = 0; i < size; ++i)
 		printf("%d <%c>\n", buffer[i], buffer[i]);
 	printf(">\n");
@@ -67,7 +67,7 @@ int* read_text_from_file_to_buff_for_proc(const char* file_name, errors* error, 
 	return buffer;
 }
 
-///returns buff
+///updates buffer
 file_information* read_text_from_file_to_buff(const char* file_name, errors* error)
 {
 	file_information* file_info = (file_information*)calloc(1, sizeof(file_information));
@@ -96,10 +96,37 @@ file_information* read_text_from_file_to_buff(const char* file_name, errors* err
 	return file_info;
 }
 
+/*size_t get_n_labels(char* buffer, size_t buff_size)
+{
+	size_t n_labels = 0;
+	for(size_t i = 0; i < buff_size; ++i)
+	{
+		if(buffer[i] == ':' && (i == 0 || buffer[i] == '\n'))
+		{
+			++n_labels;
+		}
+	}
 
-size_t get_n_strings(char* buffer, size_t buff_size)
+	return n_labels;
+}*/
+
+
+size_t get_n_strings(char* buffer, size_t buff_size, ...)  //in va_args can be pointer to count labels
 {
 	size_t n_strings = 0;
+	size_t* n_labels = NULL;
+
+	va_list args;
+	va_start(args, buff_size);
+
+	if(args)
+	{
+		n_labels = va_arg(args, size_t*);
+		*n_labels = 0;
+	}
+
+	va_end(args);	
+
 	for(size_t i = 0; i < buff_size; ++i)
 	{
 		if(buffer[i] == '\n' || buffer[i] == ' ' || buffer[i] == '\t')
@@ -108,10 +135,10 @@ size_t get_n_strings(char* buffer, size_t buff_size)
 
 			while(i + 1 < buff_size && (buffer[i + 1] == '\n' || buffer[i + 1] == ' ' || buffer[i + 1] == '\t'))
 				++i;
-			if(i + 2 < buff_size && i + 1 < buff_size)
+			/*if(i + 2 < buff_size && i + 1 < buff_size)
 				printf("cur sym <%c%c> n_strs = %lu i = %lu\n", buffer[i+1], buffer[i+2], n_strings, i);
 			else if(i + 1 < buff_size)
-				printf("cur sym <%c> n_strs = %lu i = %lu\n", buffer[i+1], n_strings, i);
+				printf("cur sym <%c> n_strs = %lu i = %lu\n", buffer[i+1], n_strings, i);*/
 		}
 		else if(buffer[i] == ';')
 		{
@@ -124,6 +151,14 @@ size_t get_n_strings(char* buffer, size_t buff_size)
 				++i;
 			
 			++n_strings;
+		}
+		else if(buffer[i] == ':' && n_labels)
+		{
+			++(*n_labels);
+			--n_strings;
+
+			while(i + 1 < buff_size && (buffer[i + 1] == '\n' || buffer[i + 1] == ' ' || buffer[i + 1] == '\t'))
+				++i;
 		}
 	}
 
@@ -144,17 +179,32 @@ void parse_buffer(file_information* file_info, errors* error)
 	}
 
 
-	size_t n_strings = get_n_strings(buffer, file_info->size);
+	size_t n_labels = 0;
+	size_t n_strings = get_n_strings(buffer, file_info->size, &n_labels);
 	file_info->n_strings = n_strings;
 
-	file_info->text = (char**)calloc(n_strings + 1, sizeof(char*));
+	file_info->text = (char**)calloc(n_strings + n_labels, sizeof(char*));
+	if(!file_info->text)
+	{
+		*error = NOT_MEMORY;
+		return;
+	}
+
+	file_info->labels = (Labels*)calloc(n_labels, sizeof(Labels));
+	if(!file_info->labels)
+	{
+		*error = NOT_MEMORY;
+		return;
+	}
+	file_info->n_labels = n_labels;
 
 	printf("size = %ld %c %d n_strings = %ld\n", file_info->size, file_info->buffer[0], file_info->buffer[0], n_strings);
 	
+	fprintf(stderr, RED"n_labels = %ld\n" RST, n_labels);
 
 	file_info->text[0] = buffer;
 
-	size_t cur_str = 0;
+	size_t cur_str = 0, cur_label = 0;
 	for(size_t i = 0; i < file_info->size; ++i)
 	{
 		//printf("buffer[i %d] = <%c> buffer[i+1 %d] = <%c>\n", i, buffer[i], i + 1, buffer[i + 1]);
@@ -200,20 +250,49 @@ void parse_buffer(file_information* file_info, errors* error)
 
 			if((i + 1) < file_info->size)
 			{
-				//printf("2i + 1 = %d file_info->size = %d cur_str = %d buf = <%c>\n", i+1, file_info->size, cur_str + 1, buffer[i+1]);
+				//printf("2 i + 1 = %d file_info->size = %d cur_str = %d buf = <%c>\n", i+1, file_info->size, cur_str + 1, buffer[i+1]);
 				file_info->text[++cur_str] = &buffer[i + 1];
 			}
 		}
+		else if(buffer[i] == ':')
+		{
+			if(cur_label >= file_info->n_labels)
+			{
+				fprintf(stderr, RED "Cur label more than count labels!\n" RST);
+				return;
+			}
+
+			buffer[i] = '\0';
+
+			while((i + 1) < file_info->size && (buffer[i + 1] == ' ' || buffer[i + 1] == '\n'))  //delete (in fact just ignore) ' ', '\n' after '\n' and ' '
+			{
+				//printf("2 buffer[i %d] = <%c> buffer[i+1 %d] = <%c>\n", i, buffer[i], i + 1, buffer[i + 1]);
+				buffer[i + 1] = '\0';
+				++i;
+			}
+
+
+			file_info->labels[cur_label].label_name = file_info->text[cur_str];
+
+			file_info->labels[cur_label++].code_num = cur_str;
+
+			file_info->text[cur_str] = &buffer[i + 1];
+		}
+
 	}
 
 	//if(cur_str)
 		//file_info->n_strings = cur_str;
 
 	printf("after parse_buffer:\n");
-	for(size_t i = 0; i < file_info->n_strings; ++i)
+	for(size_t i = 0; i < file_info->n_strings + file_info->n_labels; ++i)
 		printf("%lu <%s>\n", i, file_info->text[i]);
 
-	
+	fprintf(stderr, RED "\nlabels:\n" RST);
+	for(size_t i = 0; i < file_info->n_labels; ++i)
+		printf("%lu <%s> %lu\n", i, file_info->labels[i].label_name, file_info->labels[i].code_num);
+
+	printf("\n\n");
 }
 
 
@@ -232,6 +311,12 @@ file_information* delete_file_info(file_information* file_info)
 	{
 		free(file_info->buffer);
 		file_info->buffer = NULL;
+	}
+
+	if(file_info->labels)
+	{
+		free(file_info->labels);
+		file_info->labels = NULL;
 	}
 	
 
@@ -269,14 +354,7 @@ void swap_pointers(void* first, void* second)
 	*(char**)second = tmp;
 }
 
-/*void swap_pointers_to_strs(char** first, char** second)
-{
-	char* tmp = *first;
-	*first = *second;
-	*second = tmp;
-}
-
-int compare(const void* first_str, const void* second_str)
+/*int compare(const void* first_str, const void* second_str)
 {
 	if(!first_str || !second_str)
 		return 0;

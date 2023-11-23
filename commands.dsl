@@ -4,16 +4,20 @@
 	
 	GENERATE_CMD(HLT, 0, {
 		proc->cur_cmd_num = proc->n_commands;
+
+		CHECKPROC(error);
 	})
 
 	GENERATE_CMD(OUT, 1, {
 		//CHECKPROC(ALL_OK);
 
-		elem_type elem = stack_pop(proc->stk, &error);
-		stack_push(proc->stk, elem);
-		printf("elem = " ELEM_SPECIFIER "\n", elem);
+		elem_type elem = stack_top(proc->stk, &error);
+
+		colorful_or_style_print(proc->file_with_cpu_errors, GREEN);
+		printf("elem = " ELEM_SPECIFIER "\n\n", elem);
+		delete_colour(proc->file_with_cpu_errors);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
 	})
 
 	GENERATE_CMD(IN, 2, {
@@ -21,19 +25,18 @@
 
 		elem_type value = 0;
 		scanf("" ELEM_SPECIFIER "", &value);
-		stack_push(proc->stk, value);
+		error = stack_push(proc->stk, value);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
 	})
 
-	GENERATE_CMD(PUSH, 19, {
+	GENERATE_CMD(PUSH, 0x13, {
 		//CHECKPROC(ALL_OK);
 
-		elem_type value = 0;
-		scanf("" ELEM_SPECIFIER "", &value);
-		stack_push(proc->stk, value);
+		elem_type arg = (elem_type)proc->code[proc->cur_cmd_num++];
+		error = stack_push(proc->stk, arg);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
 	})
 
 	GENERATE_CMD(POP, 4, {
@@ -41,7 +44,7 @@
 
 		stack_pop(proc->stk, &error);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
 	})
 
 	GENERATE_CMD(ADD, 5, {
@@ -63,7 +66,7 @@
 
 		stack_push(proc->stk, elem);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
 	})
 
 	GENERATE_CMD(SUB, 6, {
@@ -83,9 +86,9 @@
 			break;
 		}
 
-		stack_push(proc->stk, elem);
+		error = stack_push(proc->stk, elem);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
 	})
 
 	GENERATE_CMD(MUL, 7, {
@@ -105,9 +108,9 @@
 			break;
 		}
 
-		stack_push(proc->stk, elem);
+		error = stack_push(proc->stk, elem);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
 	})
 
 	GENERATE_CMD(DIV, 8, {
@@ -136,26 +139,41 @@
             break;
 		}
 
-		stack_push(proc->stk, elem / second_elem);
+		error = stack_push(proc->stk, elem / second_elem);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
 	})
 
-	GENERATE_CMD(REG_PUSH, 35, {
+	GENERATE_CMD(REG_PUSH, 0x23, {
 		//CHECKPROC(ALL_OK);
 
 		int reg_num = (int)proc->code[proc->cur_cmd_num++];
-		stack_push(proc->stk, proc->regs[reg_num]);
+		error = stack_push(proc->stk, proc->regs[reg_num]);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
 	})
 
-	GENERATE_CMD(REG_POP, 36, {
+	GENERATE_CMD(REG_POP, 0x24, {
 		//CHECKPROC(ALL_OK);
 
 		int reg_num = (int)proc->code[proc->cur_cmd_num++];
 		proc->regs[reg_num] = stack_pop(proc->stk, &error);
 				
-		CHECKPROC(ALL_OK);
+		CHECKPROC(error);
+	})
+
+	GENERATE_CMD(JMP, 0x19, {
+		//CHECKPROC(ALL_OK);
+
+		int jmp_to_cmd = (int)proc->code[proc->cur_cmd_num];
+		if(jmp_to_cmd < 0 || jmp_to_cmd >= proc->n_commands)
+		{
+			error = BAD_JMP;
+			CHECKPROC(error);
+			break;
+		}
+		proc->cur_cmd_num = jmp_to_cmd + 1; //+1 due to buffer[0] = VERSION of assembler commands
+		
+		CHECKPROC(error);
 	})
 

@@ -10,8 +10,8 @@ set(SOURCE_ASM_EXE assembler.c)
 
 
 set(SOURCE_LIB work_with_strs_from_file.h work_with_strs_from_file.c
-	third-party/stack_different_types/stack_func.c third-party/stack_different_types/stack_struct.h third-party/stack_different_types/stack_func.h commands.h processor_struct.h)			# То же самое, но для библиотеки
-set(SOURCE_ASM_LIB work_with_strs_from_file.h work_with_strs_from_file.c third-party/stack_different_types/stack_func.c third-party/stack_different_types/stack_struct.h third-party/stack_different_types/stack_func.h commands.h)	
+	third-party/stack_different_types/stack_func.c third-party/stack_different_types/stack_struct.h third-party/stack_different_types/stack_func.h commands.h commands.dsl processor_struct.h colour_text.c colour_text.h)			# То же самое, но для библиотеки
+set(SOURCE_ASM_LIB work_with_strs_from_file.h work_with_strs_from_file.c third-party/stack_different_types/stack_func.c third-party/stack_different_types/stack_struct.h third-party/stack_different_types/stack_func.h commands.h commands.dsl assembler.h)	
 
 
 add_library(cpu STATIC ${SOURCE_LIB})	# Создание статической библиотеки с именем cpu

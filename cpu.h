@@ -9,11 +9,13 @@
 	#include "processor_struct.h"
 	#include "commands.h"
 	#include "work_with_strs_from_file.h"
+	#include "colour_text.h"
+	
 
 	#include <stdarg.h>
 
 	static const size_t MAX_FILE_NAME = 30;
-	static const int VERSION = 1;  //commands version
+	static const int VERSION = 2;  //commands version
 
 	#define RED "\033[0;31m"
     #define RST "\x1b[0m" 

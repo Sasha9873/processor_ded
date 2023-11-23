@@ -1,32 +1,9 @@
 /*!\file
 */
 
-#include "assembler.h"
+//TODO add labels->number
 
-#define GENERATE_CMD(name, num, ...)\
-	if(!(strcasecmp(file_info->text[cur_str], #name)))     \
-	{								\
-		int arg = 0;				\
-			fprintf(stderr, "cur_str = %d max = %d str = %s %d %d %d\n", cur_str, file_info->n_strings, file_info->text[cur_str], num, arg_mask, num & arg_mask);\
-		if(is_reg(file_info->text[cur_str + 1]))				\
-		{ \
-			++cur_str; \
-			print_in_file_and_buff(2, file_to_write, buffer, &index, num + reg_mask, file_info->text[cur_str][1] - 'a'); \
-		} \
-		else if((num & arg_mask))		\
-		{							\
-			++cur_str;	\
-			arg = atoi(file_info->text[cur_str]);  \
-			if(arg == 0 && file_info->text[cur_str][0] != '0')  \
-					fprintf(stderr, RED "Wrong reg, you have written: %s\n" RST, file_info->text[cur_str]);	\
-			print_in_file_and_buff(2, file_to_write, buffer, &index, num + arg_mask, arg);	\
-		}	\
-		else  \
-		{	\
-			print_in_file_and_buff(1, file_to_write, buffer, &index, num);	\
-		}	\
-	}\
-	else 
+#include "assembler.h"
 
 
 int is_reg(char* str)
@@ -132,7 +109,69 @@ errors print_in_file_with_byte_code(FILE* file_with_code, char* buffer, size_t i
 }
 
 
+int is_jump(int cmd_num)
+{
+	//printf(RED"cmd_num = %d %d %d\n"RST, cmd_num, cmd_num - ARG_MASK, cmd_num - ARG_MASK >= 9 && cmd_num - ARG_MASK <= 13);
+	if(cmd_num - ARG_MASK >= 9 && cmd_num - ARG_MASK <= 13)
+		return 1;
+	return 0;
+}
 
+int find_label_num(file_information* file_info, char* label_name)
+{
+	size_t i = 0;
+	while(i < file_info->n_labels && strcasecmp(file_info->labels[i].label_name, label_name))
+		++i;
+
+	if(i == file_info->n_labels)
+		return -1;
+	return file_info->labels[i].code_num;
+}
+
+//return WRONG_LABEL;
+
+#define GENERATE_CMD(name, num, ...)\
+	if(!(strcasecmp(file_info->text[cur_str], #name)))     \
+	{								\
+		int arg = 0;				\
+		if(is_jump(num)) \
+		{ \
+			if(cur_str + 1 >= file_info->n_strings + file_info->n_labels)\
+				fprintf(stderr, RED "Wrong label(%s) after %s\n"RST, file_info->text[cur_str + 1], file_info->text[cur_str]);\
+			int code_num = find_label_num(file_info, file_info->text[cur_str + 1]);\
+			if(code_num == -1){ \
+				fprintf(stderr, RED "Wrong label(%s) after %s\n"RST, file_info->text[cur_str + 1], file_info->text[cur_str]);\
+			} \
+			else{\
+				print_in_file_and_buff(2, file_to_write, buffer, &index, num, code_num);\
+				++cur_str;\
+			}\
+		} \
+		else if(cur_str + 1 < file_info->n_strings + file_info->n_labels && is_reg(file_info->text[cur_str + 1]))				\
+		{ \
+			++cur_str; \
+			if(num & ARG_MASK)	\
+				print_in_file_and_buff(2, file_to_write, buffer, &index, num + REG_MASK - ARG_MASK, file_info->text[cur_str][1] - 'a'); \
+			else	\
+				print_in_file_and_buff(2, file_to_write, buffer, &index, num + REG_MASK, file_info->text[cur_str][1] - 'a'); \
+		} \
+		else if(num & ARG_MASK)		\
+		{							\
+			if(cur_str + 1 >= file_info->n_strings + file_info->n_labels)\
+				fprintf(stderr, RED "Wrong use of command with argument(num): cur_str(%lu) + 1 >= file_info->n_strings(%lu)\
+					 + file_info->n_labels(%lu)\n"RST, cur_str, file_info->n_strings, file_info->n_labels);\
+			++cur_str;	\
+			arg = atoi(file_info->text[cur_str]);  \
+			if(arg == 0 && file_info->text[cur_str][0] != '0')  \
+					fprintf(stderr, RED "Wrong reg, you have written: %s\n" RST, file_info->text[cur_str]);	\
+			print_in_file_and_buff(2, file_to_write, buffer, &index, num, arg);	\
+		}	\
+		else  \
+		{	\
+			print_in_file_and_buff(1, file_to_write, buffer, &index, num);	\
+		}	\
+	}\
+	else 
 
 
 errors assemble(file_information* file_info)
@@ -155,17 +194,18 @@ errors assemble(file_information* file_info)
 	}
 
 
-	char* buffer = calloc(file_info->n_strings, sizeof(char));
+	char* buffer = calloc(file_info->n_strings + file_info->n_labels, sizeof(char));
 	size_t index = 0;
 
 
-	for(size_t cur_str = 0; cur_str < file_info->n_strings; ++cur_str)
+	for(size_t cur_str = 0; cur_str < file_info->n_strings + file_info->n_labels; ++cur_str)
 	{
 		if(!file_info->text[cur_str])
 			break;
+		fprintf(stderr, "cur_str = %lu %lu %lu\n", cur_str, file_info->n_strings, file_info->n_labels);
 		
-		#include "commands_dsl.h"
-
+		//if(file_info->text[cur_str][0] == ':')
+		#include "commands.dsl"
 		/*else*/
 		{
 			fprintf(stderr, RED "Unknown command: <%s>\n" RST, file_info->text[cur_str]);
@@ -187,6 +227,9 @@ errors assemble(file_information* file_info)
 	return error;
 }
 
+#undef GENERATE_CMD
+
+
 
 int main(int argc, char** argv)
 {
@@ -203,7 +246,7 @@ int main(int argc, char** argv)
 	}
 
 	errors error = ALL_OK;
-	//printf("file_name = %s\n", file_name);
+	printf("file_name = %s\n", file_name);
 	file_information* file_info = read_text_from_file_to_buff(file_name, &error);
 	if(error != ALL_OK)
 	{
@@ -234,4 +277,3 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-#undef GENERATE_CMD

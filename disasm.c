@@ -3,7 +3,43 @@
 
 #include "disasm.h"
 
+/*#define GENERATE_CMD(name, num, ...)\
+	case CMD_##name:	\
+		if(num & reg_mask)\
+			fprintf(file_ptr, "%s r%cx\n", #name, buffer[++cur_cmd_num] + 'a');	\
+		else if(num & arg_mask) \
+			fprintf(file_ptr, "%s %d\n", #name, buffer[++cur_cmd_num]);	\
+		else	\
+			fprintf(file_ptr, "%s\n", #name);	\
+		break;
+
 errors disassemble(int* buffer, size_t buff_size, FILE* file_ptr)
+{
+	if(!buffer)
+		return BAD_POINTER;
+
+	int error = ALL_OK;
+
+	int cmd;
+
+
+	for(size_t cur_cmd_num = 0; cur_cmd_num < buff_size; ++cur_cmd_num)
+	{
+		cmd = buffer[cur_cmd_num];
+
+		switch(cmd)
+		{
+			#include "commands_dsl.h"
+		}
+	}
+
+	return error;
+}
+
+#undef GENERATE_CMD
+*/
+
+errors disassemble(char* buffer, size_t buff_size, FILE* file_ptr)
 {
 	if(!buffer)
 		return BAD_POINTER;
@@ -105,10 +141,7 @@ errors disassemble(int* buffer, size_t buff_size, FILE* file_ptr)
 }
 
 int main(int argc, char** argv)
-{
-	errors error = ALL_OK;
-	size_t buff_size = 0;
-	
+{	
 	char file_name[MAX_FILE_NAME];
 
 	if(argc < 2)  //no file name
@@ -120,12 +153,15 @@ int main(int argc, char** argv)
 		strncpy(file_name, argv[1], MAX_FILE_NAME - 1);
 	}
 
-	int* buffer = read_text_from_file_to_buff_for_proc(file_name, &error, &buff_size);
+	int error = ALL_OK;
+	size_t buff_size = 0;
+	char* buffer = (char*)read_text_from_file_to_buff_for_proc(file_name, &error, &buff_size);
 	if(error != ALL_OK)
 	{
 		fprintf(stderr, RED "error = %d\n" RST, error);
 		return error;
 	}
+
 
 	FILE* file_ptr = open_file("disasm.txt", "wb", &error);
 

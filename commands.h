@@ -8,7 +8,7 @@
 		CMD_##name = num,
 	
 	typedef enum commands{
-		#include "commands_dsl.h"
+		#include "commands.dsl"
     } commands;
 
     #undef GENERATE_CMD

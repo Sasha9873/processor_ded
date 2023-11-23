@@ -1,6 +1,9 @@
-in 
+IN
 in 
 in
+
+label:
+jmp end
 
 pop rcx   ; rcx = rdx = 7
 pop rbx	  ; rbx = 10
@@ -17,5 +20,9 @@ push rbx
 mul  ;b^2
 
 sub
+
+jmp label
+
+end:
 out
 hlt 

@@ -13,7 +13,11 @@
 
     static const int MAX_FILE_NAME = 30;
 
-    errors disassemble(int* buffer, size_t buff_size, FILE* file_ptr);
+    errors disassemble(char* buffer, size_t buff_size, FILE* file_ptr);
+
+    static const int VERSION = 1;  //commands version
+    static const int arg_mask = 0b10000;
+    static const int reg_mask = 0b100000;
 
 
 #endif
