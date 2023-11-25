@@ -30,7 +30,7 @@
 		CHECKPROC(error);
 	})
 
-	GENERATE_CMD(PUSH, 0x13, {
+	GENERATE_CMD(PUSH, 0x23, {
 		//CHECKPROC(ALL_OK);
 
 		elem_type arg = (elem_type)proc->code[proc->cur_cmd_num++];
@@ -116,7 +116,7 @@
 	GENERATE_CMD(DIV, 8, {
 		//CHECKPROC(ALL_OK);
 
-		elem_type elem = stack_pop(proc->stk, &error);
+		elem_type first_elem = stack_pop(proc->stk, &error);
 		if(error != ALL_OK)
 		{
 			print_parse_cpu_error(error, proc->file_with_cpu_errors);
@@ -139,12 +139,12 @@
             break;
 		}
 
-		error = stack_push(proc->stk, elem / second_elem);
+		error = stack_push(proc->stk, first_elem / second_elem);
 				
 		CHECKPROC(error);
 	})
 
-	GENERATE_CMD(REG_PUSH, 0x23, {
+	GENERATE_CMD(REG_PUSH, 0x43, {
 		//CHECKPROC(ALL_OK);
 
 		int reg_num = (int)proc->code[proc->cur_cmd_num++];
@@ -153,7 +153,7 @@
 		CHECKPROC(error);
 	})
 
-	GENERATE_CMD(REG_POP, 0x24, {
+	GENERATE_CMD(REG_POP, 0x44, {
 		//CHECKPROC(ALL_OK);
 
 		int reg_num = (int)proc->code[proc->cur_cmd_num++];
@@ -162,18 +162,204 @@
 		CHECKPROC(error);
 	})
 
-	GENERATE_CMD(JMP, 0x19, {
+	GENERATE_CMD(JMP, 0x29, {
 		//CHECKPROC(ALL_OK);
 
-		int jmp_to_cmd = (int)proc->code[proc->cur_cmd_num];
-		if(jmp_to_cmd < 0 || jmp_to_cmd >= proc->n_commands)
-		{
-			error = BAD_JMP;
-			CHECKPROC(error);
+		make_jump(proc, &error);
+		if(error != ALL_OK)
 			break;
-		}
-		proc->cur_cmd_num = jmp_to_cmd + 1; //+1 due to buffer[0] = VERSION of assembler commands
 		
 		CHECKPROC(error);
 	})
 
+	GENERATE_CMD(JA, 0x2A, {
+		//CHECKPROC(ALL_OK);
+
+		elem_type first_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		elem_type second_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		if(first_elem > second_elem)
+		{
+			make_jump(proc, &error);
+			if(error != ALL_OK)
+				break;
+		}
+		else
+			++proc->cur_cmd_num;
+
+		
+		CHECKPROC(error);
+	})
+
+	GENERATE_CMD(JB, 0x2B, {
+		//CHECKPROC(ALL_OK);
+
+		elem_type first_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		elem_type second_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		if(first_elem < second_elem)
+		{
+			make_jump(proc, &error);
+			if(error != ALL_OK)
+				break;
+		}	
+		else
+			++proc->cur_cmd_num;
+		
+		CHECKPROC(error);
+	})
+
+	GENERATE_CMD(JAE, 0x2C, {
+		//CHECKPROC(ALL_OK);
+
+		elem_type first_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		elem_type second_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		if(first_elem >= second_elem)
+		{
+			make_jump(proc, &error);
+			if(error != ALL_OK)
+				break;
+		}	
+		else
+			++proc->cur_cmd_num;
+		
+		CHECKPROC(error);
+	})
+
+	GENERATE_CMD(JBE, 0x2D, {
+		//CHECKPROC(ALL_OK);
+
+		elem_type first_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		elem_type second_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		if(first_elem <= second_elem)
+		{
+			make_jump(proc, &error);
+			if(error != ALL_OK)
+				break;
+		}	
+		else
+			++proc->cur_cmd_num;
+		
+		CHECKPROC(error);
+	})
+
+	GENERATE_CMD(JE, 0x2E, {
+		//CHECKPROC(ALL_OK);
+
+		elem_type first_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		elem_type second_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		if(first_elem == second_elem)
+		{
+			make_jump(proc, &error);
+			if(error != ALL_OK)
+				break;
+		}	
+		else
+			++proc->cur_cmd_num;
+		
+		CHECKPROC(error);
+	})
+
+	GENERATE_CMD(JNE, 0x2F, {
+		//CHECKPROC(ALL_OK);
+
+		elem_type first_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		elem_type second_elem = stack_pop(proc->stk, &error);
+		if(error != ALL_OK)
+		{
+			print_parse_cpu_error(error, proc->file_with_cpu_errors);
+			break;
+		}
+
+		if(first_elem != second_elem)
+		{
+			make_jump(proc, &error);
+			if(error != ALL_OK)
+				break;
+		}	
+		else
+			++proc->cur_cmd_num;
+		
+		CHECKPROC(error);
+	})
+
+	GENERATE_CMD(JM, 0x30, {
+		//CHECKPROC(ALL_OK);
+
+		if(1)
+		{
+			make_jump(proc, &error);
+			if(error != ALL_OK)
+				break;
+		}	
+		else
+			++proc->cur_cmd_num;
+		
+		CHECKPROC(error);
+	})
+
+	

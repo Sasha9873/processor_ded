@@ -44,4 +44,7 @@
 
 	int run_proc(Proc* proc);
 
+	void make_jump(Proc* proc, errors* error);
+
+
 #endif

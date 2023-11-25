@@ -112,7 +112,7 @@ errors print_in_file_with_byte_code(FILE* file_with_code, char* buffer, size_t i
 int is_jump(int cmd_num)
 {
 	//printf(RED"cmd_num = %d %d %d\n"RST, cmd_num, cmd_num - ARG_MASK, cmd_num - ARG_MASK >= 9 && cmd_num - ARG_MASK <= 13);
-	if(cmd_num - ARG_MASK >= 9 && cmd_num - ARG_MASK <= 13)
+	if(cmd_num - ARG_MASK >= 9 && cmd_num - ARG_MASK <= 16)
 		return 1;
 	return 0;
 }
@@ -152,6 +152,8 @@ int find_label_num(file_information* file_info, char* label_name)
 			++cur_str; \
 			if(num & ARG_MASK)	\
 				print_in_file_and_buff(2, file_to_write, buffer, &index, num + REG_MASK - ARG_MASK, file_info->text[cur_str][1] - 'a'); \
+			else if(num & REG_MASK)	\
+				print_in_file_and_buff(2, file_to_write, buffer, &index, num, file_info->text[cur_str][1] - 'a'); \
 			else	\
 				print_in_file_and_buff(2, file_to_write, buffer, &index, num + REG_MASK, file_info->text[cur_str][1] - 'a'); \
 		} \

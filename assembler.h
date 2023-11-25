@@ -17,7 +17,7 @@
 	static const int N_REGS = 4;
 
 	static const int VERSION = 2;  //commands version
-	static const int ARG_MASK = 0x10;
-	static const int REG_MASK = 0x20;
+	static const int ARG_MASK = 0x20;
+	static const int REG_MASK = 0x40;
 
 #endif

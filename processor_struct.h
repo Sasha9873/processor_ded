@@ -7,7 +7,7 @@
 	#include "third-party/stack_different_types/stack_struct.h"
     #include "cpu_errors_enum_naming.h"
 
-	#define DEBUG 1
+	#define DEBUG 0
 
 
     #if DEBUG == 0

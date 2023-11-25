@@ -2,6 +2,33 @@
 */
 
 #include "cpu.h" 
+
+void make_jump(Proc* proc, errors* error)
+{
+	int jmp_to_cmd = (int)proc->code[proc->cur_cmd_num];
+	if(jmp_to_cmd < 0 || jmp_to_cmd >= proc->n_commands)
+	{
+		*error = BAD_JMP;
+		CHECKPROC(*error);
+	}
+	proc->cur_cmd_num = jmp_to_cmd + 1; //+1 due to buffer[0] = VERSION of assembler commands
+}
+
+int check_if_should_jump(Proc* proc, errors* error)
+{
+	elem_type first_elem = stack_pop(proc->stk, error);
+	if(*error != ALL_OK)
+	{
+		print_parse_cpu_error(*error, proc->file_with_cpu_errors);
+	}
+
+	elem_type second_elem = stack_pop(proc->stk, error);
+	if(*error != ALL_OK)
+	{
+		print_parse_cpu_error(*error, proc->file_with_cpu_errors);
+	}
+}
+
 Proc* proc_ctor(errors* error, ...) //can give char* buffer and its length in __VA_ARGS__
 
 {
